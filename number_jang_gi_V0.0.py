@@ -1,21 +1,8 @@
 #숫자장기
 #V0.0 -- 실행 불가 버전입니다.
-
-#모듈 그딴거 없다. 히히 랜덤 나중에 넣어야지
 import time as ti
-#┌─┬─┬─┬─┬─┬─┬─┬─┬─┐ ******왼쪽 위 부터 1,1 오른쪽위 1,9 왼쪽 아래 6,1 오른쪽 아래 ㅗㅜㅑ
-#│ │ │ │ │ │ │ │ │ │ ******왼쪽이 player_a 오른쪽이 player_b
-#├─┼─┼─┼─┼─┼─┼─┼─┼─┤ 
-#│ │ │ │ │ │ │ │ │ │
-#├─┼─┼─┼─┼─┼─┼─┼─┼─┤
-#│ │ │ │ │ │ │ │ │ │
-#├─┼─┼─┼─┼─┼─┼─┼─┼─┤
-#│ │ │ │ │ │ │ │ │ │
-#├─┼─┼─┼─┼─┼─┼─┼─┼─┤
-#│ │ │ │ │ │ │ │ │ │
-#├─┼─┼─┼─┼─┼─┼─┼─┼─┤
-#│ │ │ │ │ │ │ │ │ │
-#└─┴─┴─┴─┴─┴─┴─┴─┴─┘
+# ******왼쪽 위 부터 1,1 오른쪽위 1,9 왼쪽 아래 6,1 오른쪽 아래 ㅗㅜㅑ
+# ******왼쪽이 player_a 오른쪽이 player_b
 
 #제일 작은 리스트 [0]= 0(NONE)1(player_a)2(player_b) [1]=marker
 tile = [[[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]], [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]], [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]], [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]], [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]], [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]], [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]], [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]], [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]]]
@@ -338,23 +325,20 @@ def move_b():
 #x에 after_tile_x,y에 after_tile_y 넣어서 활용
 def meet_check(x,y):
     team = tile[x][y][0]
-    x_plus_battle = '0'
-    x_minus_battle = '0'
-    y_plus_battle = '0'
-    y_minus_battle = '0'
+    battle = [0,0,0,0]#x+, x-, y+, y-
     if tile[x + 1][y][0] != team:
-        x_plus_battle = '1'
+        battle[0] = 1
     elif tile[x - 1][y][0] != team:
-        x_minus_battle = '1'
+        battle[1] = 1
     elif tile[x][y + 1][0] != team:
-        y_plus_battle = '1'
+        battle[2] = 1
     elif tile[x][y - 1][0] != team:
-        y_minus_battle = '1'
+        battle[3] = 1
     else:
         pass
 
-    tot_battle= x_plus_battle + x_minus_battle + y_plus_battle + y_minus_battle
-    battle_count = tot_battle.count('1')
+    battle_count= battle.count(1)
+    
 
 def battle(a_x,a_y,b_x,b_y):
     if tile[a_x][a_y][1] == 'K':
@@ -424,11 +408,12 @@ def lose(player, cause):
             print("패배 이유 : player_a의 왕을 제외한 모든 말이 잡혔습니다.")
         elif cause == 'time_out':
             print("player_a : 패배 player_b : 승리")
+            print("패배 이유: 말을 놓을 수 있는 시간(60초)이 다 지났습니다.")
         elif cause == 'k_forward':
             print("player_a : 패배 player_b : 승리")
+            print("player_b의 왕이 player_a의 진영 끝에 도달했습니다.")
         else:
-            print("player_a : 패배 player_b : 승리")
-            print("패배 이유: 버그")
+            print("버그 발생 오류코드:lose_cause_error")
     else:
         if cause == 'k_dead':
             print("player_a : 승리 player_b : 패배")
@@ -437,11 +422,13 @@ def lose(player, cause):
             print("player_a : 승리 player_b : 패배")
             print("패배 이유 : player_b의 왕을 제외한 모든 말이 잡혔습니다.")
         elif cause == 'time_out':
-            print("")
+            print("player_a : 승리 player_b : 패배")
+            print("패배 이유: 말을 놓을 수 있는 시간(60초)이 다 지났습니다.")
         elif cause == 'k_forward':
-            print("")
+            print("player_a : 승리 player_b : 패배")
+            print("player_a의 왕이 player_b의 진영 끝에 도달했습니다.")
         else:
-            print("버그")
+            print("버그 발생 오류코드:lose_cause_error")
 print(tile)
 visualize_all()
 prepare_tile_a()
