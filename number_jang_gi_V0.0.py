@@ -433,46 +433,79 @@ def lose(player, cause):
         if cause == 'k_dead':
             print("player_a : 패배 player_b : 승리")
             print("패배 이유 : player_a의 왕이 잡혔습니다.")
+            game_end = True
         elif cause == 'other_dead':
             print("player_a : 패배 player_b : 승리")
             print("패배 이유 : player_a의 왕을 제외한 모든 말이 잡혔습니다.")
+            game_end = True
         elif cause == 'time_out':
             print("player_a : 패배 player_b : 승리")
             print("패배 이유: 말을 놓을 수 있는 시간(60초)이 다 지났습니다.")
+            game_end = True
         elif cause == 'k_forward':
             print("player_a : 패배 player_b : 승리")
             print("player_b의 왕이 player_a의 진영 끝에 도달했습니다.")
+            game_end = True
         else:
             print("버그 발생 오류코드:lose_cause_error")
     else:
         if cause == 'k_dead':
             print("player_a : 승리 player_b : 패배")
             print("패배 이유 : player_b의 왕이 잡혔습니다.")
+            game_end = True
         elif cause == 'other_dead':
             print("player_a : 승리 player_b : 패배")
             print("패배 이유 : player_b의 왕을 제외한 모든 말이 잡혔습니다.")
+            game_end = True
         elif cause == 'time_out':
             print("player_a : 승리 player_b : 패배")
             print("패배 이유: 말을 놓을 수 있는 시간(60초)이 다 지났습니다.")
+            game_end = True
         elif cause == 'k_forward':
             print("player_a : 승리 player_b : 패배")
             print("player_a의 왕이 player_b의 진영 끝에 도달했습니다.")
+            game_end = True
         else:
             print("버그 발생 오류코드:lose_cause_error")
 
-def player_change():
+def player_change(a):
     for i in range (30):
         print(" ")
+    if a == 'a':
+        print("현재 플레이어 : player_a")
+    elif a == 'b':
+        print("현재 플레이어 : player_b")
+    elif a == 'both':
+        print("현재 플레이어 : 둘 다")
     input("플레이어를 바꾼 뒤 enter키를 입력해주십시오...")
 
 
 
 
-
 visualize_all()
+player_change('a')
 prepare_tile_a()
-visualize_all()
+visualize_a()
+print("다음과 같이 배치되었습니다.")
+player_change('b')
 prepare_tile_b()
-visualize_all()
+visualize_b()
+print("다음과 같이 배치되었습니다.")
+player_change('both')
+print("==========================주의 사항==========================")
+print("1.패배 조건은 다음과 같습니다.")
+print("1-1. 자신의 왕이 잡혔을 경우")
+print("1-2. 자신의 왕을 제외한 모든 말이 잡혔을 경우")
+print("1-3. 상대의 왕이 자신의 진영 맨 끝쪽에 도달했을 경우")
+print("1-4. 60초 이내에 어디로 말을 움직일지 결정하지 못했을 경우(단, 몇초가 지났는지는 중간에 말해주지 않고, 말을 두는 시점이 60초가 넘었는지 아닌지만 판정합니다.")
+print("==========================게임 시작==========================")
+while not game_end:
+    player_change('a')
+    move_a()
+    player_change('b')
+    move_b()
+
+input("프로그램을 종료합니다.")
+
 
 
