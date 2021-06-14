@@ -211,11 +211,6 @@ def visualize_all():
             print("│",end='')
             print(spac(tile[i_tile % 9][i_tile // 9][1]),end='')
         
-#막아야 할 거
-#빈 공간으로 움직이기 (Done)
-#다른 말이 있는 공간으로 움직이기(Done)
-#자신의 말을 넘어 가기(전진 시 만 고려하면 됨)(Done)
-#지뢰 이동
 def move_a():
     while True:
         try:
@@ -262,12 +257,17 @@ def move_a():
             print("지뢰는 움직일 수 없습니다.다시 움직여 주십시오.")
             continue
         else:
-            pass
+            break
 
-        tile[after_tile_x][after_tile_y][1] = tile[before_tile_x][before_tile_y][1]
-        tile[after_tile_x][after_tile_y][0] = tile[before_tile_x][before_tile_y][0]
-        tile[before_tile_x][before_tile_y][0] = 0
-        tile[before_tile_x][before_tile_y][1] = 0
+    tile[after_tile_x][after_tile_y][1] = tile[before_tile_x][before_tile_y][1]
+    tile[after_tile_x][after_tile_y][0] = tile[before_tile_x][before_tile_y][0]
+    tile[before_tile_x][before_tile_y][0] = 0
+    tile[before_tile_x][before_tile_y][1] = 0
+
+    if tile[after_tile_x][after_tile_y][1] == 'K' and tile[after_tile_x][after_tile_y][0] == 1 and after_tile_x == 9:
+        lose(2,k_forward)
+
+    meet_check(after_tile_x, after_tile_y)
         
 def move_b():
     while True:
@@ -315,13 +315,30 @@ def move_b():
             print("지뢰는 움직일 수 없습니다.다시 움직여 주십시오.")
             continue
         else:
-            pass
+            break
 
-        tile[after_tile_x][after_tile_y][1] = tile[before_tile_x][before_tile_y][1]
-        tile[after_tile_x][after_tile_y][0] = tile[before_tile_x][before_tile_y][0]
-        tile[before_tile_x][before_tile_y][0] = 0
-        tile[before_tile_x][before_tile_y][1] = 0
+    tile[after_tile_x][after_tile_y][1] = tile[before_tile_x][before_tile_y][1]
+    tile[after_tile_x][after_tile_y][0] = tile[before_tile_x][before_tile_y][0]
+    tile[before_tile_x][before_tile_y][0] = 0
+    tile[before_tile_x][before_tile_y][1] = 0
 
+    if tile[after_tile_x][after_tile_y][1] == 'K' and tile[after_tile_x][after_tile_y][0] == 2 and after_tile_x == 1:
+        lose(1,k_forward)
+
+    meet_check(after_tile_x, after_tile_y)
+        
+
+#start_time은 턴 시작과 동시에 카운트
+#lose_check는 턴 종료에 카운트
+def lose_check(player):
+    end_time = ti.time()
+    tot_time = end_time - start_time
+    if tot_time > 60 :
+        lose(player, time_out)
+    elif player_a_dead == ['1','2','3','4','5','6','7','8','9','10','M','M','M']:
+        lose(1,other_dead)
+    elif player_b_dead == ['1','2','3','4','5','6','7','8','9','10','M','M','M']:
+        lose(2,other_dead)
 #x에 after_tile_x,y에 after_tile_y 넣어서 활용
 def meet_check(x,y):
     team = tile[x][y][0]
@@ -337,9 +354,22 @@ def meet_check(x,y):
     else:
         pass
 
-    battle_count= battle.count(1)
+    b_count= battle.count(1)
+    if b_count == 0:
+        pass
+    else:
+        for i in range(b_count):
+            if battle[0] == 1:
+                battle(x,y,x+1,y)
+            elif battle[1] == 1:
+                    battle(x,y,x-1,y)
+            elif battle[2] == 1:
+                battle(x,y,x,y+1)
+            elif battle[3] == 1:
+                battle(x,y,x,y-1)
+            else:
+                pass
     
-
 def battle(a_x,a_y,b_x,b_y):
     if tile[a_x][a_y][1] == 'K':
         dead(a_x,a_y)
@@ -429,7 +459,16 @@ def lose(player, cause):
             print("player_a의 왕이 player_b의 진영 끝에 도달했습니다.")
         else:
             print("버그 발생 오류코드:lose_cause_error")
-print(tile)
+
+def player_change():
+    for i in range (30):
+        print(" ")
+    input("플레이어를 바꾼 뒤 enter키를 입력해주십시오...")
+
+
+
+
+
 visualize_all()
 prepare_tile_a()
 visualize_all()
