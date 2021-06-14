@@ -418,20 +418,24 @@ def lose(player, cause):
     if player == 1:
         if cause == 'k_dead':
             print("player_a : 패배 player_b : 승리")
-            print("pla")
+            print("패배 이유 : player_a의 왕이 잡혔습니다.")
         elif cause == 'other_dead':
-            print("")
+            print("player_a : 패배 player_b : 승리")
+            print("패배 이유 : player_a의 왕을 제외한 모든 말이 잡혔습니다.")
         elif cause == 'time_out':
-            print("")
+            print("player_a : 패배 player_b : 승리")
         elif cause == 'k_forward':
-            print("")
+            print("player_a : 패배 player_b : 승리")
         else:
-            print("버그")
+            print("player_a : 패배 player_b : 승리")
+            print("패배 이유: 버그")
     else:
         if cause == 'k_dead':
-            print("뭐 대충 적겄지")
+            print("player_a : 승리 player_b : 패배")
+            print("패배 이유 : player_b의 왕이 잡혔습니다.")
         elif cause == 'other_dead':
-            print("")
+            print("player_a : 승리 player_b : 패배")
+            print("패배 이유 : player_b의 왕을 제외한 모든 말이 잡혔습니다.")
         elif cause == 'time_out':
             print("")
         elif cause == 'k_forward':
