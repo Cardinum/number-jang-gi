@@ -117,13 +117,13 @@ def visualize_a():
             if not tile[i_tile % 9][i_tile // 9][0] == 2:
                 print(spac(tile[i_tile % 9][i_tile // 9][1]),end='')
             else:
-                print("□",end = '')
+                print(" □ ",end = '')
         elif i_tile == 53:
             print("│",end='')
             if not tile[i_tile % 9][i_tile // 9][0] == 2:
                 print(spac(tile[i_tile % 9][i_tile // 9][1]),end='')
             else:
-                print("□",end = '')
+                print(" □ ",end = '')
             print("│")
             print("└───┴───┴───┴───┴───┴───┴───┴───┴───┘")
         elif i_tile % 9 == 0:
@@ -132,20 +132,20 @@ def visualize_a():
             if not tile[i_tile % 9][i_tile // 9][0] == 2:
                 print(spac(tile[i_tile % 9][i_tile // 9][1]),end='')
             else:
-                print("□",end = '')
+                print(" □ ",end = '')
         elif i_tile % 9 == 8:
             print("│",end='')
             if not tile[i_tile % 9][i_tile // 9][0] == 2:
                 print(spac(tile[i_tile % 9][i_tile // 9][1]),end='')
             else:
-                print("□",end = '')
+                print(" □ ",end = '')
             print("│")
         else:
             print("│",end='')
             if not tile[i_tile % 9][i_tile // 9][0] == 2:
                 print(spac(tile[i_tile % 9][i_tile // 9][1]),end='')
             else:
-                print("□",end = '')
+                print(" □ ",end = '')
 
 def visualize_b():
     space=' '
@@ -157,13 +157,13 @@ def visualize_b():
             if not tile[i_tile % 9][i_tile // 9][0] == 1:
                 print(spac(tile[i_tile % 9][i_tile // 9][1]),end='')
             else:
-                print("□",end = '')
+                print(" □ ",end = '')
         elif i_tile == 53:
             print("│",end='')
             if not tile[i_tile % 9][i_tile // 9][0] == 1:
                 print(spac(tile[i_tile % 9][i_tile // 9][1]),end='')
             else:
-                print("□",end = '')
+                print(" □ ",end = '')
             print("│")
             print("└───┴───┴───┴───┴───┴───┴───┴───┴───┘")
         elif i_tile % 9 == 0:
@@ -172,20 +172,20 @@ def visualize_b():
             if not tile[i_tile % 9][i_tile // 9][0] == 1:
                 print(spac(tile[i_tile % 9][i_tile // 9][1]),end='')
             else:
-                print("□",end = '')
+                print(" □ ",end = '')
         elif i_tile % 9 == 8:
             print("│",end='')
             if not tile[i_tile % 9][i_tile // 9][0] == 1:
                 print(spac(tile[i_tile % 9][i_tile // 9][1]),end='')
             else:
-                print("□",end = '')
+                print(" □ ",end = '')
             print("│")
         else:
             print("│",end='')
             if not tile[i_tile % 9][i_tile // 9][0] == 1:
                 print(spac(tile[i_tile % 9][i_tile // 9][1]),end='')
             else:
-                print("□",end = '')
+                print(" □ ",end = '')
 
 def visualize_all():
     space=' '
@@ -482,7 +482,7 @@ def player_change(a):
 
 
 
-
+game_end = False
 visualize_all()
 player_change('a')
 prepare_tile_a()
@@ -503,8 +503,10 @@ print("2.제발 하라는 짓만 하십시오.")
 print("==========================게임 시작==========================")
 while not game_end:
     player_change('a')
+    start_time = ti.time()
     move_a()
     player_change('b')
+    start_time = ti.time()
     move_b()
 
 input("프로그램을 종료합니다.")
