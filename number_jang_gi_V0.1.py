@@ -6,7 +6,8 @@ import time as ti
 # ******왼쪽이 player_a 오른쪽이 player_b
 
 #제일 작은 리스트 [0]= 0(NONE)1(player_a)2(player_b) [1]=marker
-tile = [[[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]], [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]], [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]], [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]], [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]], [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]], [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]], [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]], [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]]]
+#tile = [[[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]], [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]], [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]], [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]], [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]], [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]], [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]], [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]], [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]]]
+tile=[[[0, 0], [1, '10'], [1, 'K'], [0, 0], [1, '1'], [1, '2']], [[1, '9'], [0, 0], [1, '7'], [1, 'M'], [1, '3'], [1, '8']], [[0, 0], [1, 'M'], [1, '4'], [1, '6'], [1, '5'], [1, 'M']], [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]], [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]], [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]], [[2, 'M'], [2, '9'], [2, '3'], [2, '10'], [0, 0], [2, '5']], [[2, '7'], [2, '1'], [2, '8'], [2, '2'], [2, 'M'], [0, 0]], [[0, 0], [2, 'M'], [2, 'K'], [2, '6'], [2, '4'], [0, 0]]]
 #리스트가 이조랄 난 이유는 잡것 폴더의 test.py 참조
 player_a_remain = ['1','2','3','4','5','6','7','8','9','10','M','M','M','K']
 player_b_remain = ['1','2','3','4','5','6','7','8','9','10','M','M','M','K']
@@ -216,13 +217,17 @@ def move_a():
     while True:
         try:
             before_tile_x,before_tile_y = input("움직일 말의 x값,y값을 공백으로 구분하여 입력하여 주십시오.").split()
+            before_tile_x = int(before_tile_x) - 1
+            before_tile_y = int(before_tile_y) - 1
         except:
             print("잘못된 입력입니다.")
             continue
         move_size = 1
         dire = input("움직일 방향을 설정해 주십시오. [1]상단[2]우측 상단[3]오른쪽(최대 2칸)[4]우측 하단[5]하단")
+        dire = int(dire)
         if dire == 3:
             move_size = input("움직일 칸 수를 설정해 주십시오. [1]1칸[2]2칸")
+            move_size = int(move_size)
         else:
             pass
         
@@ -251,12 +256,14 @@ def move_a():
         elif not tile[after_tile_x][after_tile_y][1] == 0:
             print("이미 말이 있는 칸입니다. 다시 움직여 주십시오.")
             continue
-        elif tile[after_tile_x][after_tile_y - 1][0] == 1:
+        elif tile[after_tile_x + 1][after_tile_y][0] == 1:
             print("자신의 말은 뛰어 넘을 수 없습니다. 다시 움직여 주십시오.")
             continue
         elif tile[before_tile_x][before_tile_y][1] == 'M':
             print("지뢰는 움직일 수 없습니다.다시 움직여 주십시오.")
             continue
+        elif tile[before_tile_x][before_tile_y][1] == 0:
+            print("비어있는 칸을 움직일 수 없습니다.다시 움직여 주십시오.")
         else:
             break
 
@@ -266,7 +273,7 @@ def move_a():
     tile[before_tile_x][before_tile_y][1] = 0
 
     if tile[after_tile_x][after_tile_y][1] == 'K' and tile[after_tile_x][after_tile_y][0] == 1 and after_tile_x == 9:
-        lose(2,k_forward)
+        lose(2,'k_forward')
 
     meet_check(after_tile_x, after_tile_y)
         
@@ -274,13 +281,17 @@ def move_b():
     while True:
         try:
             before_tile_x,before_tile_y = input("움직일 말의 x값,y값을 공백으로 구분하여 입력하여 주십시오.").split()
+            before_tile_x = int(before_tile_x) - 1
+            before_tile_y = int(before_tile_y) - 1
         except:
             print("잘못된 입력입니다.")
             continue
         move_size = 1
         dire = input("움직일 방향을 설정해 주십시오. [1]상단[2]좌측 상단[3]왼쪽(최대 2칸)[4]좌측 하단[5]하단")
+        dire = int(dire)
         if dire == 3:
             move_size = input("움직일 칸 수를 설정해 주십시오. [1]1칸[2]2칸")
+            move_size = int(move_size)
         else:
             pass
         
@@ -309,12 +320,14 @@ def move_b():
         elif not tile[after_tile_x][after_tile_y][1] == 0:
             print("이미 말이 있는 칸입니다. 다시 움직여 주십시오.")
             continue
-        elif tile[after_tile_x][after_tile_y + 1][0] == 2:
+        elif tile[after_tile_x - 1][after_tile_y][0] == 2:
             print("자신의 말은 뛰어 넘을 수 없습니다. 다시 움직여 주십시오.")
             continue
         elif tile[before_tile_x][before_tile_y][1] == 'M':
             print("지뢰는 움직일 수 없습니다.다시 움직여 주십시오.")
             continue
+        elif tile[before_tile_x][before_tile_y][1] == 0:
+            print("비어있는 칸을 움직일 수 없습니다.다시 움직여 주십시오.")
         else:
             break
 
@@ -324,7 +337,7 @@ def move_b():
     tile[before_tile_x][before_tile_y][1] = 0
 
     if tile[after_tile_x][after_tile_y][1] == 'K' and tile[after_tile_x][after_tile_y][0] == 2 and after_tile_x == 1:
-        lose(1,k_forward)
+        lose(1,'k_forward')
 
     meet_check(after_tile_x, after_tile_y)
         
@@ -335,83 +348,168 @@ def lose_check(player):
     end_time = ti.time()
     tot_time = end_time - start_time
     if tot_time > 60 :
-        lose(player, time_out)
+        lose(player, 'time_out')
     elif player_a_dead == ['1','2','3','4','5','6','7','8','9','10','M','M','M']:
-        lose(1,other_dead)
+        lose(1,'other_dead')
     elif player_b_dead == ['1','2','3','4','5','6','7','8','9','10','M','M','M']:
-        lose(2,other_dead)
+        lose(2,'other_dead')
 #x에 after_tile_x,y에 after_tile_y 넣어서 활용
+#말이 테두리 범위에 있을경우 index error 나는거 예외
 def meet_check(x,y):
+    x = int(x)
+    y = int(y)
     team = tile[x][y][0]
-    battle = [0,0,0,0]#x+, x-, y+, y-
-    if tile[x + 1][y][0] != team:
-        battle[0] = 1
-    elif tile[x - 1][y][0] != team:
-        battle[1] = 1
-    elif tile[x][y + 1][0] != team:
-        battle[2] = 1
-    elif tile[x][y - 1][0] != team:
-        battle[3] = 1
-    else:
+    b = [0,0,0,0]#x+, x-, y+, y-
+    try:
+        if tile[x + 1][y][0] != team and tile[x + 1][y][0] != 0:
+            b[0] = 1
+    except:
+        pass
+    try:
+        if tile[x - 1][y][0] != team and tile[x - 1][y][0] != 0:
+            b[1] = 1
+    except:
+        pass
+    try:
+        if tile[x][y + 1][0] != team and tile[x][y + 1][0] != 0:
+            b[2] = 1
+    except:pass
+    try:
+        if tile[x][y - 1][0] != team and tile[x][y - 1][0] != 0:
+            b[3] = 1
+    except:
         pass
 
-    b_count= battle.count(1)
+    b_count= b.count(1)
     if b_count == 0:
         pass
     else:
         for i in range(b_count):
-            if battle[0] == 1:
+            if b[0] == 1:
                 battle(x,y,x+1,y)
-            elif battle[1] == 1:
+            elif b[1] == 1:
                     battle(x,y,x-1,y)
-            elif battle[2] == 1:
+            elif b[2] == 1:
                 battle(x,y,x,y+1)
-            elif battle[3] == 1:
+            elif b[3] == 1:
                 battle(x,y,x,y-1)
             else:
                 pass
     
+def pn_to_p(player_number):
+    if player_number == 1:
+        return 'player_a'
+    else:
+        return 'player_b'
+    
 def battle(a_x,a_y,b_x,b_y):
     if tile[a_x][a_y][1] == 'K':
+        print("==========대결 발생==========")
+        print(pn_to_p(tile[a_x][a_y][0])+"의 말 : "+tile[a_x][a_y][1])
+        print(pn_to_p(tile[b_x][b_y][0])+"의 말 : "+tile[b_x][b_y][1])
         dead(a_x,a_y)
     elif tile[b_x][b_y][1] == 'K':
+        print("==========대결 발생==========")
+        print(pn_to_p(tile[a_x][a_y][0])+"의 말 : "+tile[a_x][a_y][1])
+        print(pn_to_p(tile[b_x][b_y][0])+"의 말 : "+tile[b_x][b_y][1])
         dead(b_x,b_y)
     elif tile[a_x][a_y][1] == 'M' or tile[b_x][b_y][1] == 'M':
+        print("==========대결 발생==========")
+        print(pn_to_p(tile[a_x][a_y][0])+"의 말 : "+tile[a_x][a_y][1])
+        print(pn_to_p(tile[b_x][b_y][0])+"의 말 : "+tile[b_x][b_y][1])
+        print("지뢰와 대결하여 player_a의 말과 player_b의 말 둘 다 사망입니다.")
         dead(a_x,a_y)
         dead(b_x,b_y)
     elif int(tile[a_x][a_y][1])+int(tile[b_x][b_y][1]) < 10:
         if int(tile[a_x][a_y][1]) > int(tile[b_x][b_y][1]):
+            print("==========대결 발생==========")
+            print(pn_to_p(tile[a_x][a_y][0])+"의 말 : "+tile[a_x][a_y][1])
+            print(pn_to_p(tile[b_x][b_y][0])+"의 말 : "+tile[b_x][b_y][1])
+            print("두 수의 합이 10보다 낮으므로 낮은 숫자인 "+tile[b_x][b_y][1]+" 승리")
             dead(a_x,a_y)
         elif int(tile[a_x][a_y][1]) < int(tile[b_x][b_y][1]):
+            print("==========대결 발생==========")
+            print(pn_to_p(tile[a_x][a_y][0])+"의 말 : "+tile[a_x][a_y][1])
+            print(pn_to_p(tile[b_x][b_y][0])+"의 말 : "+tile[b_x][b_y][1])
+            print("두 수의 합이 10보다 낮으므로 낮은 숫자인 "+tile[a_x][a_y][1]+" 승리")
             dead(b_x,b_y)
         else:
+            print("==========대결 발생==========")
+            print(pn_to_p(tile[a_x][a_y][0])+"의 말 : "+tile[a_x][a_y][1])
+            print(pn_to_p(tile[b_x][b_y][0])+"의 말 : "+tile[b_x][b_y][1])
+            print("무승부이므로 말 둘 다 사망입니다.")
             dead(a_x,a_y)
             dead(b_x,b_y)
     elif int(tile[a_x][a_y][1])+int(tile[b_x][b_y][1]) >9:
         if int(tile[a_x][a_y][1]) > int(tile[b_x][b_y][1]):
+            print("==========대결 발생==========")
+            print(pn_to_p(tile[a_x][a_y][0]) + "의 말 : " + tile[a_x][a_y][1])
+            print(pn_to_p(tile[b_x][b_y][0]) + "의 말 : " + tile[b_x][b_y][1])
+            print("두 수의 합이 10보다 크므로 높은 숫자인 "+tile[a_x][a_y][1]+" 승리")
             dead(b_x,b_y)
         elif int(tile[a_x][a_y][1]) < int(tile[b_x][b_y][1]):
+            
+            print("==========대결 발생==========")
+            print(pn_to_p(tile[a_x][a_y][0])+"의 말 : "+tile[a_x][a_y][1])
+            print(pn_to_p(tile[b_x][b_y][0])+"의 말 : "+tile[b_x][b_y][1])
+            print("두 수의 합이 10보다 크므로 높은 숫자인 "+tile[b_x][b_y][1]+" 승리")
             dead(a_x,a_y)
         else:
+            print("==========대결 발생==========")
+            print(pn_to_p(tile[a_x][a_y][0])+"의 말 : "+tile[a_x][a_y][1])
+            print(pn_to_p(tile[b_x][b_y][0])+"의 말 : "+tile[b_x][b_y][1])
+            print("무승부이므로 말 둘 다 사망입니다.")
             dead(a_x,a_y)
             dead(b_x,b_y)
     elif ( a_y + b_y == 3 and abs(a_y - b_y) == 1) or ( a_y + b_y == 7 and abs(a_y - b_y) == 1):
         if abs(int(tile[a_x][a_y][1]) - int(tile[b_x][b_y][1])) < 10:
             if int(tile[a_x][a_y][1]) > int(tile[b_x][b_y][1]):
+                print("==========대결 발생==========")
+                print("*******마이너스 대결입니다.")
+                print(pn_to_p(tile[a_x][a_y][0])+"의 말 : "+tile[a_x][a_y][1])
+                print(pn_to_p(tile[b_x][b_y][0])+"의 말 : "+tile[b_x][b_y][1])
+                print("두 수의 차가 10보다 낮으므로 낮은 숫자인 "+tile[b_x][b_y][1]+" 승리")
                 dead(a_x,a_y)
             elif int(tile[a_x][a_y][1]) < int(tile[b_x][b_y][1]):
+                print("==========대결 발생==========")
+                print("*******마이너스 대결입니다.")
+                print(pn_to_p(tile[a_x][a_y][0])+"의 말 : "+tile[a_x][a_y][1])
+                print(pn_to_p(tile[b_x][b_y][0])+"의 말 : "+tile[b_x][b_y][1])
+                print("두 수의 차가 10보다 낮으므로 낮은 숫자인 "+tile[a_x][a_y][1]+" 승리")
                 dead(b_x,b_y)
             else:
+                print("==========대결 발생==========")
+                print("*******마이너스 대결입니다.")
+                print(pn_to_p(tile[a_x][a_y][0])+"의 말 : "+tile[a_x][a_y][1])
+                print(pn_to_p(tile[b_x][b_y][0])+"의 말 : "+tile[b_x][b_y][1])
+                print("무승부이므로 말 둘 다 사망입니다.")
                 dead(a_x,a_y)
                 dead(b_x,b_y)
         elif abs(int(tile[a_x][a_y][1]) - int(tile[b_x][b_y][1]))>10:
             if int(tile[a_x][a_y][1]) > int(tile[b_x][b_y][1]):
+                print("==========대결 발생==========")
+                print("*******마이너스 대결입니다.")
+                print(pn_to_p(tile[a_x][a_y][0])+"의 말 : "+tile[a_x][a_y][1])
+                print(pn_to_p(tile[b_x][b_y][0])+"의 말 : "+tile[b_x][b_y][1])
+                print("두 수의 차가 10보다 크므로 높은 숫자인 "+tile[a_x][a_y][1]+" 승리")
                 dead(b_x,b_y)
             elif int(tile[a_x][a_y][1]) < int(tile[b_x][b_y][1]):
+                print("==========대결 발생==========")
+                print("*******마이너스 대결입니다.")
+                print(pn_to_p(tile[a_x][a_y][0])+"의 말 : "+tile[a_x][a_y][1])
+                print(pn_to_p(tile[b_x][b_y][0])+"의 말 : "+tile[b_x][b_y][1])
+                print("두 수의 차가 10보다 크므로 높은 숫자인 "+tile[b_x][b_y][1]+" 승리")
                 dead(a_x,a_y)
             else:
+                
+                print("==========대결 발생==========")
+                print("*******마이너스 대결입니다.")
+                print(pn_to_p(tile[a_x][a_y][0])+"의 말 : "+tile[a_x][a_y][1])
+                print(pn_to_p(tile[b_x][b_y][0])+"의 말 : "+tile[b_x][b_y][1])
+                print("무승부이므로 말 둘 다 사망입니다.")
                 dead(a_x,a_y)
                 dead(b_x,b_y)
+
 
 def dead(x,y):
     if tile[x][y][1] == 'K':
@@ -483,16 +581,17 @@ def player_change(a):
 
 
 game_end = False
-visualize_all()
-player_change('a')
-prepare_tile_a()
-visualize_a()
-print("다음과 같이 배치되었습니다.")
-player_change('b')
-prepare_tile_b()
-visualize_b()
-print("다음과 같이 배치되었습니다.")
-player_change('both')
+#visualize_all()
+#player_change('a')
+#prepare_tile_a()
+#visualize_a()
+#input("다음과 같이 배치되었습니다.")
+#player_change('b')
+#prepare_tile_b()
+#visualize_b()
+#input("다음과 같이 배치되었습니다.")
+#player_change('both')
+print(tile)
 print("==========================주의 사항==========================")
 print("1.패배 조건은 다음과 같습니다.")
 print("1-1. 자신의 왕이 잡혔을 경우")
@@ -500,14 +599,22 @@ print("1-2. 자신의 왕을 제외한 모든 말이 잡혔을 경우")
 print("1-3. 상대의 왕이 자신의 진영 맨 끝쪽에 도달했을 경우")
 print("1-4. 60초 이내에 어디로 말을 움직일지 결정하지 못했을 경우(단, 몇초가 지났는지는 중간에 말해주지 않고, 말을 두는 시점이 60초가 넘었는지 아닌지만 판정합니다.")
 print("2.제발 하라는 짓만 하십시오.")
-print("==========================게임 시작==========================")
+#input("==========================게임 시작==========================")
 while not game_end:
     player_change('a')
     start_time = ti.time()
+    visualize_a()
     move_a()
+    lose_check(1)
+    visualize_a()
+    input("다음과 같이 움직였습니다.")
     player_change('b')
     start_time = ti.time()
+    visualize_b()
     move_b()
+    lose_check(2)
+    visualize_b()
+    input("다음과 같이 움직였습니다.")
 
 input("프로그램을 종료합니다.")
 
