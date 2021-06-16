@@ -383,24 +383,139 @@ def meet_check(x,y):
     b_count= b.count(1)
     if b_count == 0:
         pass
-    else:
-        for i in range(b_count):
+    elif b_count == 1:
+        if b[0] == 1:
+            battle(x,y,x+1,y)
+        elif b[1] == 1:
+                battle(x,y,x-1,y)
+        elif b[2] == 1:
+            battle(x,y,x,y+1)
+        elif b[3] == 1:
+            battle(x,y,x,y-1)
+        else:
+            pass
+    elif b_count == 2:
+        b_x = 10
+        b_y = 10
+        c_x = 10
+        c_y = 10
+        if b_x == 10 and b_y == 10:
             if b[0] == 1:
-                battle(x,y,x+1,y)
+                b_x = x+1
+                b_y = y
+                b[0] = 0
             elif b[1] == 1:
-                    battle(x,y,x-1,y)
+                b_x = x-1
+                b_y = y
+                b[1] = 0
             elif b[2] == 1:
-                battle(x,y,x,y+1)
+                b_x = x
+                b_y = y+1
+                b[2] = 0
             elif b[3] == 1:
-                battle(x,y,x,y-1)
-            else:
-                pass
+                b_x = x-1
+                b_y = y-1
+                b[3] = 0
+            else: pass
+        else:
+            if b[0] == 1:
+                c_x = x+1
+                c_y = y
+                b[0] = 0
+            elif b[1] == 1:
+                c_x = x-1
+                c_y = y
+                b[1] = 0
+            elif b[2] == 1:
+                c_x = x
+                c_y = y+1
+                b[2] = 0
+            elif b[3] == 1:
+                c_x = x-1
+                c_y = y-1
+                b[3] = 0
+            else: pass
+        battle_two(x,y,b_x,b_y,c_x,c_y)
+    elif b_count == 3:
+        b_x = 10
+        b_y = 10
+        c_x = 10
+        c_y = 10
+        d_x = 10
+        d_y = 10
+        if b_x == 10 and b_y == 10:
+            if b[0] == 1:
+                b_x = x+1
+                b_y = y
+                b[0] = 0
+            elif b[1] == 1:
+                b_x = x-1
+                b_y = y
+                b[1] = 0
+            elif b[2] == 1:
+                b_x = x
+                b_y = y+1
+                b[2] = 0
+            elif b[3] == 1:
+                b_x = x-1
+                b_y = y-1
+                b[3] = 0
+            else: pass
+        elif c_x == 10 and c_y == 10:
+            if b[0] == 1:
+                c_x = x+1
+                c_y = y
+                b[0] = 0
+            elif b[1] == 1:
+                c_x = x-1
+                c_y = y
+                b[1] = 0
+            elif b[2] == 1:
+                c_x = x
+                c_y = y+1
+                b[2] = 0
+            elif b[3] == 1:
+                c_x = x-1
+                c_y = y-1
+                b[3] = 0
+            else: pass
+        else:
+            if b[0] == 1:
+                d_x = x+1
+                d_y = y
+                b[0] = 0
+            elif b[1] == 1:
+                d_x = x-1
+                d_y = y
+                b[1] = 0
+            elif b[2] == 1:
+                d_x = x
+                d_y = y+1
+                b[2] = 0
+            elif b[3] == 1:
+                d_x = x-1
+                d_y = y-1
+                b[3] = 0
+            else: pass
+        battle_three(x,y,b_x,b_y,c_x,c_y,d_x,d_y)
+    else:pass    
+           
+                
+        
+        
     
 def pn_to_p(player_number):
     if player_number == 1:
         return 'player_a'
     else:
         return 'player_b'
+
+def battle_two(a_x,a_y,b_x,b_y,c_x,c_y):
+    
+    
+def battle_three(a_x,a_y,b_x,b_y,c_x,c_y,d_x,d_y):
+    
+    
     
 def battle(a_x,a_y,b_x,b_y):
     if tile[a_x][a_y][1] == 'K':
