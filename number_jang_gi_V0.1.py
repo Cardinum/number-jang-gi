@@ -233,10 +233,10 @@ def move_a():
         
         if dire == 1:
             after_tile_x = before_tile_x
-            after_tile_y = before_tile_y + 1
+            after_tile_y = before_tile_y - 1
         elif dire == 2:
             after_tile_x = before_tile_x + 1
-            after_tile_y = before_tile_y + 1
+            after_tile_y = before_tile_y - 1
         elif dire == 3:
             after_tile_y= before_tile_y
             if move_size == 1:
@@ -245,10 +245,10 @@ def move_a():
                 after_tile_x = before_tile_x + 2
         elif dire == 4:
             after_tile_x = before_tile_x + 1
-            after_tile_y = before_tile_y - 1
+            after_tile_y = before_tile_y + 1
         else:
             after_tile_x = before_tile_x 
-            after_tile_y = before_tile_y - 1
+            after_tile_y = before_tile_y + 1
 
         if after_tile_x > 8 or after_tile_x < 0 or after_tile_y > 5 or after_tile_y < 0:
             print("빈 공간으로는 이동이 불가능합니다. 다시 움직여 주십시오.")
@@ -297,10 +297,10 @@ def move_b():
         
         if dire == 1:
             after_tile_x = before_tile_x
-            after_tile_y = before_tile_y + 1
+            after_tile_y = before_tile_y - 1
         elif dire == 2:
             after_tile_x = before_tile_x - 1
-            after_tile_y = before_tile_y + 1
+            after_tile_y = before_tile_y - 1
         elif dire == 3:
             after_tile_y = before_tile_y
             if move_size == 1:
@@ -309,10 +309,10 @@ def move_b():
                 after_tile_x = before_tile_x - 2
         elif dire == 4:
             after_tile_x = before_tile_x - 1
-            after_tile_y = before_tile_y - 1
+            after_tile_y = before_tile_y + 1
         else:
             after_tile_x = before_tile_x 
-            after_tile_y = before_tile_y - 1
+            after_tile_y = before_tile_y + 1
 
         if after_tile_x > 8 or after_tile_x < 0 or after_tile_y > 5 or after_tile_y < 0:
             print("빈 공간으로는 이동이 불가능합니다. 다시 움직여 주십시오.")
