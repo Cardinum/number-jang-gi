@@ -5,15 +5,17 @@ import time as ti
 # ******왼쪽 위 부터 1,1 오른쪽위 1,9 왼쪽 아래 6,1 오른쪽 아래 ㅗㅜㅑ
 # ******왼쪽이 player_a 오른쪽이 player_b
 
-#버그 고칠거
-#y = 2,3 4,5일 때 마이너스 대결 안되는거 
+#버그 고칠거 (위에서 부터 해 무조건)
+#위에서 부터 해
+#y = 2,3 4,5일 때 마이너스 대결 안되는거 (Done) 
 #2개 만났는데 3개 만났다고 개 ㅈㄹ 하는거
+#ㅋㅋ 아 상대 말이 움직여 지네 아 이게 되네 시발련아 뒤지고 싶냐? 
+#visible 여부에 따라서 visualize 차이 두기
 #아 시발 버그 병신
 
-#제일 작은 리스트 [0]= 0(NONE)1(player_a)2(player_b) [1]=marker
-#tile = [[[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]], [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]], [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]], [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]], [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]], [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]], [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]], [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]], [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]]]
-#테스트 타일
-tile=[[[0, 0], [1, '10'], [1, 'K'], [0, 0], [1, '1'], [1, '2']], [[1, '9'], [0, 0], [1, '7'], [1, 'M'], [1, '3'], [1, '8']], [[0, 0], [1, 'M'], [1, '4'], [1, '6'], [1, '5'], [1, 'M']], [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]], [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]], [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]], [[2, 'M'], [2, '9'], [2, '3'], [2, '10'], [0, 0], [2, '5']], [[2, '7'], [2, '1'], [2, '8'], [2, '2'], [2, 'M'], [0, 0]], [[0, 0], [2, 'M'], [2, 'K'], [2, '6'], [2, '4'], [0, 0]]]
+#제일 작은 리스트 [0]= 0(NONE)1(player_a)2(player_b) [1]=marker [2] = 0 invisible 1 player_a visible 2 player_b visible 3 visible 
+tile = [[[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]]]
+tile = [[[0, 0], [1, '10'], [1, 'K'], [0, 0], [1, '1'], [1, '2']], [[1, '9'], [0, 0], [1, '7'], [1, 'M'], [1, '3'], [1, '8']], [[0, 0], [1, 'M'], [1, '4'], [1, '6'], [1, '5'], [1, 'M']], [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]], [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]], [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]], [[2, 'M'], [2, '9'], [2, '3'], [2, '10'], [0, 0], [2, '5']], [[2, '7'], [2, '1'], [2, '8'], [2, '2'], [2, 'M'], [0, 0]], [[0, 0], [2, 'M'], [2, 'K'], [2, '6'], [2, '4'], [0, 0]]]
 #리스트가 이조랄 난 이유는 잡것 폴더의 test.py 참조 (test.py 어디감)
 player_a_remain = ['1','2','3','4','5','6','7','8','9','10','M','M','M','K']
 player_b_remain = ['1','2','3','4','5','6','7','8','9','10','M','M','M','K']
@@ -60,6 +62,7 @@ def prepare_tile_a():
         else: 
             tile[x-1][y-1][1]=marker
             tile[x-1][y-1][0]=1
+            tile[x-1][y-1][2]=1
             continue
 
 #player_b 타일 준비 (a와 같음)
@@ -100,6 +103,7 @@ def prepare_tile_b():
         else: 
             tile[x-1][y-1][1]=marker
             tile[x-1][y-1][0]=2
+            tile[x-1][y-1][2]=2
             continue
 
 #말의 정보를 3단위로 나누어주는 부분 ++
@@ -120,13 +124,13 @@ def visualize_a():
         if i_tile == 0:
             print("┌───┬───┬───┬───┬───┬───┬───┬───┬───┐")
             print("│",end='')
-            if not tile[i_tile % 9][i_tile // 9][0] == 2:
+            if not tile[i_tile % 9][i_tile // 9][2] == 2:
                 print(spac(tile[i_tile % 9][i_tile // 9][1]),end='')
             else:
                 print(" □ ",end = '')
         elif i_tile == 53:
             print("│",end='')
-            if not tile[i_tile % 9][i_tile // 9][0] == 2:
+            if not tile[i_tile % 9][i_tile // 9][2] == 2:
                 print(spac(tile[i_tile % 9][i_tile // 9][1]),end='')
             else:
                 print(" □ ",end = '')
@@ -135,20 +139,20 @@ def visualize_a():
         elif i_tile % 9 == 0:
             print("├───┼───┼───┼───┼───┼───┼───┼───┼───┤")
             print("│",end='')
-            if not tile[i_tile % 9][i_tile // 9][0] == 2:
+            if not tile[i_tile % 9][i_tile // 9][2] == 2:
                 print(spac(tile[i_tile % 9][i_tile // 9][1]),end='')
             else:
                 print(" □ ",end = '')
         elif i_tile % 9 == 8:
             print("│",end='')
-            if not tile[i_tile % 9][i_tile // 9][0] == 2:
+            if not tile[i_tile % 9][i_tile // 9][2] == 2:
                 print(spac(tile[i_tile % 9][i_tile // 9][1]),end='')
             else:
                 print(" □ ",end = '')
             print("│")
         else:
             print("│",end='')
-            if not tile[i_tile % 9][i_tile // 9][0] == 2:
+            if not tile[i_tile % 9][i_tile // 9][2] == 2:
                 print(spac(tile[i_tile % 9][i_tile // 9][1]),end='')
             else:
                 print(" □ ",end = '')
@@ -160,13 +164,13 @@ def visualize_b():
         if i_tile == 0:
             print("┌───┬───┬───┬───┬───┬───┬───┬───┬───┐")
             print("│",end='')
-            if not tile[i_tile % 9][i_tile // 9][0] == 1:
+            if not tile[i_tile % 9][i_tile // 9][2] == 1 :
                 print(spac(tile[i_tile % 9][i_tile // 9][1]),end='')
             else:
                 print(" □ ",end = '')
         elif i_tile == 53:
             print("│",end='')
-            if not tile[i_tile % 9][i_tile // 9][0] == 1:
+            if not tile[i_tile % 9][i_tile // 9][2] == 1:
                 print(spac(tile[i_tile % 9][i_tile // 9][1]),end='')
             else:
                 print(" □ ",end = '')
@@ -175,25 +179,65 @@ def visualize_b():
         elif i_tile % 9 == 0:
             print("├───┼───┼───┼───┼───┼───┼───┼───┼───┤")
             print("│",end='')
-            if not tile[i_tile % 9][i_tile // 9][0] == 1:
+            if not tile[i_tile % 9][i_tile // 9][2] == 1:
                 print(spac(tile[i_tile % 9][i_tile // 9][1]),end='')
             else:
                 print(" □ ",end = '')
         elif i_tile % 9 == 8:
             print("│",end='')
-            if not tile[i_tile % 9][i_tile // 9][0] == 1:
+            if not tile[i_tile % 9][i_tile // 9][2] == 1:
                 print(spac(tile[i_tile % 9][i_tile // 9][1]),end='')
             else:
                 print(" □ ",end = '')
             print("│")
         else:
             print("│",end='')
-            if not tile[i_tile % 9][i_tile // 9][0] == 1:
+            if not tile[i_tile % 9][i_tile // 9][2] == 1:
                 print(spac(tile[i_tile % 9][i_tile // 9][1]),end='')
             else:
                 print(" □ ",end = '')
 
 def visualize_all():
+    space=' '
+    t_tile=''
+    for i_tile in range(54):
+        if i_tile == 0:
+            print("┌───┬───┬───┬───┬───┬───┬───┬───┬───┐")
+            print("│",end='')
+            if not tile[i_tile % 9][i_tile // 9][2] == 3 :
+                print(spac(tile[i_tile % 9][i_tile // 9][1]),end='')
+            else:
+                print(" □ ",end = '')
+        elif i_tile == 53:
+            print("│",end='')
+            if not tile[i_tile % 9][i_tile // 9][2] == 3 :
+                print(spac(tile[i_tile % 9][i_tile // 9][1]),end='')
+            else:
+                print(" □ ",end = '')
+            print("│")
+            print("└───┴───┴───┴───┴───┴───┴───┴───┴───┘")
+        elif i_tile % 9 == 0:
+            print("├───┼───┼───┼───┼───┼───┼───┼───┼───┤")
+            print("│",end='')
+            if not tile[i_tile % 9][i_tile // 9][2] == 1:
+                print(spac(tile[i_tile % 9][i_tile // 9][1]),end='')
+            else:
+                print(" □ ",end = '')
+        elif i_tile % 9 == 8:
+            print("│",end='')
+            if not tile[i_tile % 9][i_tile // 9][2] == 1:
+                print(spac(tile[i_tile % 9][i_tile // 9][1]),end='')
+            else:
+                print(" □ ",end = '')
+            print("│")
+        else:
+            print("│",end='')
+            if not tile[i_tile % 9][i_tile // 9][2] == 1:
+                print(spac(tile[i_tile % 9][i_tile // 9][1]),end='')
+            else:
+                print(" □ ",end = '')
+
+def visualize():
     space=' '
     t_tile=''
     for i_tile in range(54):
@@ -386,6 +430,7 @@ def meet_check(x,y):
         pass
 
     b_count= b.count(1)
+    print(b)
     if b_count == 0:
         pass
     elif b_count == 1:
