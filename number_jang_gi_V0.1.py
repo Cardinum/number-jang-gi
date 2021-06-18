@@ -555,28 +555,6 @@ def battle(a_x,a_y, b_x,b_y, c_x = 10, c_y = 10, d_x = 10, d_y = 10):
         print("지뢰와 대결하여 player_a의 말과 player_b의 말 둘 다 사망입니다.")
         a_live = False
         b_live = False
-    elif int(marker_a)+int(marker_b) < 10:
-        if int(marker_a) > int(marker_b):
-            print("두 수의 합이 10보다 낮으므로 낮은 숫자인 "+marker_b+" 승리")
-            a_live = False
-        elif int(marker_a) < int(marker_b):
-            print("두 수의 합이 10보다 낮으므로 낮은 숫자인 "+marker_a+" 승리")
-            b_live = False
-        else:
-            print("무승부이므로 말 둘 다 사망입니다.")
-            a_live = False
-            b_live = False
-    elif int(marker_a)+int(marker_b) >9:
-        if int(marker_a) > int(marker_b):
-            print("두 수의 합이 10보다 크므로 높은 숫자인 "+marker_a+" 승리")
-            b_live = False
-        elif int(marker_a) < int(marker_b):
-            print("두 수의 합이 10보다 크므로 높은 숫자인 "+marker_b+" 승리")
-            a_live = False
-        else:
-            print("무승부이므로 말 둘 다 사망입니다.")
-            a_live = False
-            b_live = False
     elif ( a_y + b_y == 3 and abs(a_y - b_y) == 1) or ( a_y + b_y == 7 and abs(a_y - b_y) == 1):
         if abs(int(marker_a) - int(marker_b)) < 10:
             if int(marker_a) > int(marker_b):
@@ -606,6 +584,28 @@ def battle(a_x,a_y, b_x,b_y, c_x = 10, c_y = 10, d_x = 10, d_y = 10):
                 print("무승부이므로 말 둘 다 사망입니다.")
                 a_live = False
                 b_live = False
+    elif int(marker_a)+int(marker_b) < 10:
+        if int(marker_a) > int(marker_b):
+            print("두 수의 합이 10보다 낮으므로 낮은 숫자인 "+marker_b+" 승리")
+            a_live = False
+        elif int(marker_a) < int(marker_b):
+            print("두 수의 합이 10보다 낮으므로 낮은 숫자인 "+marker_a+" 승리")
+            b_live = False
+        else:
+            print("무승부이므로 말 둘 다 사망입니다.")
+            a_live = False
+            b_live = False
+    elif int(marker_a)+int(marker_b) >9:
+        if int(marker_a) > int(marker_b):
+            print("두 수의 합이 10보다 크므로 높은 숫자인 "+marker_a+" 승리")
+            b_live = False
+        elif int(marker_a) < int(marker_b):
+            print("두 수의 합이 10보다 크므로 높은 숫자인 "+marker_b+" 승리")
+            a_live = False
+        else:
+            print("무승부이므로 말 둘 다 사망입니다.")
+            a_live = False
+            b_live = False
     
     if not none_c :
         print("==========대결 발생==========")
@@ -620,28 +620,6 @@ def battle(a_x,a_y, b_x,b_y, c_x = 10, c_y = 10, d_x = 10, d_y = 10):
             print("지뢰와 대결하여 player_a의 말과 player_b의 말 둘 다 사망입니다.")
             a_live = False
             c_live = False
-        elif int(marker_a)+int(marker_c) < 10:
-            if int(marker_a) > int(marker_c):
-                print("두 수의 합이 10보다 낮으므로 낮은 숫자인 "+marker_c+" 승리")
-                a_live = False
-            elif int(marker_a) < int(marker_c):
-                print("두 수의 합이 10보다 낮으므로 낮은 숫자인 "+marker_a+" 승리")
-                c_live = False
-            else:
-                print("무승부이므로 말 둘 다 사망입니다.")
-                a_live = False
-                c_live = False
-        elif int(marker_a)+int(marker_c) >9:
-            if int(marker_a) > int(marker_c):
-                print("두 수의 합이 10보다 크므로 높은 숫자인 "+marker_a+" 승리")
-                c_live = False
-            elif int(marker_a) < int(marker_c):
-                print("두 수의 합이 10보다 크므로 높은 숫자인 "+marker_c+" 승리")
-                a_live = False
-            else:
-                print("무승부이므로 말 둘 다 사망입니다.")
-                a_live = False
-                c_live = False
         elif ( a_y + c_y == 3 and abs(a_y - c_y) == 1) or ( a_y + c_y == 7 and abs(a_y - c_y) == 1):
             if abs(int(marker_a) - int(marker_c)) < 10:
                 if int(marker_a) > int(marker_c):
@@ -671,6 +649,29 @@ def battle(a_x,a_y, b_x,b_y, c_x = 10, c_y = 10, d_x = 10, d_y = 10):
                     print("무승부이므로 말 둘 다 사망입니다.")
                     a_live = False
                     c_live = False
+        elif int(marker_a)+int(marker_c) < 10:
+            if int(marker_a) > int(marker_c):
+                print("두 수의 합이 10보다 낮으므로 낮은 숫자인 "+marker_c+" 승리")
+                a_live = False
+            elif int(marker_a) < int(marker_c):
+                print("두 수의 합이 10보다 낮으므로 낮은 숫자인 "+marker_a+" 승리")
+                c_live = False
+            else:
+                print("무승부이므로 말 둘 다 사망입니다.")
+                a_live = False
+                c_live = False
+        elif int(marker_a)+int(marker_c) >9:
+            if int(marker_a) > int(marker_c):
+                print("두 수의 합이 10보다 크므로 높은 숫자인 "+marker_a+" 승리")
+                c_live = False
+            elif int(marker_a) < int(marker_c):
+                print("두 수의 합이 10보다 크므로 높은 숫자인 "+marker_c+" 승리")
+                a_live = False
+            else:
+                print("무승부이므로 말 둘 다 사망입니다.")
+                a_live = False
+                c_live = False
+        
     
     if not none_d :
         print("==========대결 발생==========")
@@ -685,28 +686,6 @@ def battle(a_x,a_y, b_x,b_y, c_x = 10, c_y = 10, d_x = 10, d_y = 10):
             print("지뢰와 대결하여 player_a의 말과 player_b의 말 둘 다 사망입니다.")
             a_live = False
             d_live = False
-        elif int(marker_a)+int(marker_d) < 10:
-            if int(marker_a) > int(marker_d):
-                print("두 수의 합이 10보다 낮으므로 낮은 숫자인 "+marker_d+" 승리")
-                a_live = False
-            elif int(marker_a) < int(marker_d):
-                print("두 수의 합이 10보다 낮으므로 낮은 숫자인 "+marker_a+" 승리")
-                d_live = False
-            else:
-                print("무승부이므로 말 둘 다 사망입니다.")
-                a_live = False
-                d_live = False
-        elif int(marker_a)+int(marker_d) >9:
-            if int(marker_a) > int(marker_d):
-                print("두 수의 합이 10보다 크므로 높은 숫자인 "+marker_a+" 승리")
-                d_live = False
-            elif int(marker_a) < int(marker_d):
-                print("두 수의 합이 10보다 크므로 높은 숫자인 "+marker_d+" 승리")
-                a_live = False
-            else:
-                print("무승부이므로 말 둘 다 사망입니다.")
-                a_live = False
-                d_live = False
         elif ( a_y + d_y == 3 and abs(a_y - d_y) == 1) or ( a_y + d_y == 7 and abs(a_y - d_y) == 1):
             if abs(int(marker_a) - int(marker_d)) < 10:
                 if int(marker_a) > int(marker_d):
@@ -736,6 +715,29 @@ def battle(a_x,a_y, b_x,b_y, c_x = 10, c_y = 10, d_x = 10, d_y = 10):
                     print("무승부이므로 말 둘 다 사망입니다.")
                     a_live = False
                     d_live = False
+        elif int(marker_a)+int(marker_d) < 10:
+            if int(marker_a) > int(marker_d):
+                print("두 수의 합이 10보다 낮으므로 낮은 숫자인 "+marker_d+" 승리")
+                a_live = False
+            elif int(marker_a) < int(marker_d):
+                print("두 수의 합이 10보다 낮으므로 낮은 숫자인 "+marker_a+" 승리")
+                d_live = False
+            else:
+                print("무승부이므로 말 둘 다 사망입니다.")
+                a_live = False
+                d_live = False
+        elif int(marker_a)+int(marker_d) >9:
+            if int(marker_a) > int(marker_d):
+                print("두 수의 합이 10보다 크므로 높은 숫자인 "+marker_a+" 승리")
+                d_live = False
+            elif int(marker_a) < int(marker_d):
+                print("두 수의 합이 10보다 크므로 높은 숫자인 "+marker_d+" 승리")
+                a_live = False
+            else:
+                print("무승부이므로 말 둘 다 사망입니다.")
+                a_live = False
+                d_live = False
+        
     
     if not a_live:
         dead(a_x,a_y)
