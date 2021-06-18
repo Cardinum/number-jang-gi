@@ -395,6 +395,7 @@ def meet_check(x,y):
         else:
             pass
     elif b_count == 2:
+        prnit("b_count =2")
         b_x = 10
         b_y = 10
         c_x = 10
@@ -435,8 +436,10 @@ def meet_check(x,y):
                 c_y = y-1
                 b[3] = 0
             else: pass
+        print(c_x,c_y)
         battle(x,y,b_x,b_y,c_x,c_y)
     elif b_count == 3:
+        print("b_count = 3")
         b_x = 10
         b_y = 10
         c_x = 10
@@ -530,6 +533,8 @@ def battle(a_x,a_y, b_x,b_y, c_x = 10, c_y = 10, d_x = 10, d_y = 10):
             none_d = True
         else:pass
     else:pass
+
+    print(c_x,c_y,d_x,d_y,none_c,none_d)
 
     
 
