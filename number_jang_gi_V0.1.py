@@ -5,17 +5,13 @@ import time as ti
 # ******왼쪽 위 부터 1,1 오른쪽위 1,9 왼쪽 아래 6,1 오른쪽 아래 ㅗㅜㅑ
 # ******왼쪽이 player_a 오른쪽이 player_b
 
-#버그 고칠거 (위에서 부터 해 무조건)
-#위에서 부터 해
-#y = 2,3 4,5일 때 마이너스 대결 안되는거 (Done) 
-#2개 만났는데 3개 만났다고 개 ㅈㄹ 하는거
-#ㅋㅋ 아 상대 말이 움직여 지네 아 이게 되네 시발련아 뒤지고 싶냐? 
+#버그 고칠거
+#2개 만났는데 3개 만났다고 개 ㅈㄹ 하는거 (시발)
 #visible 여부에 따라서 visualize 차이 두기
-#아 시발 버그 병신
 
 #제일 작은 리스트 [0]= 0(NONE)1(player_a)2(player_b) [1]=marker [2] = 0 invisible 1 player_a visible 2 player_b visible 3 visible 
 tile = [[[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]]]
-tile = [[[0, 0], [1, '10'], [1, 'K'], [0, 0], [1, '1'], [1, '2']], [[1, '9'], [0, 0], [1, '7'], [1, 'M'], [1, '3'], [1, '8']], [[0, 0], [1, 'M'], [1, '4'], [1, '6'], [1, '5'], [1, 'M']], [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]], [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]], [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]], [[2, 'M'], [2, '9'], [2, '3'], [2, '10'], [0, 0], [2, '5']], [[2, '7'], [2, '1'], [2, '8'], [2, '2'], [2, 'M'], [0, 0]], [[0, 0], [2, 'M'], [2, 'K'], [2, '6'], [2, '4'], [0, 0]]]
+tile = [[[0, 0, 0], [1, '10', 1], [1, 'K', 1], [0, 0, 0], [1, '1', 1], [1, '2', 1]], [[1, '9', 1], [0, 0, 0], [1, '7', 1], [1, 'M', 1], [1, '3', 1], [1, '8', 1]], [[0, 0, 0], [1, 'M', 1], [1, '4', 1], [1, '6', 1], [1, '5', 1], [1, 'M', 1]], [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]], [[2, 'M', 2], [2, '9', 2], [2, '3', 2], [2, '10', 2], [0, 0, 0], [2, '5', 2]], [[2, '7', 2], [2, '1', 2], [2, '8', 2], [2, '2', 2], [2, 'M', 2], [0, 0, 0]], [[0, 0, 0], [2, 'M', 2], [2, 'K', 2], [2, '6', 2], [2, '4', 2], [0, 0, 0]]]
 #리스트가 이조랄 난 이유는 잡것 폴더의 test.py 참조 (test.py 어디감)
 player_a_remain = ['1','2','3','4','5','6','7','8','9','10','M','M','M','K']
 player_b_remain = ['1','2','3','4','5','6','7','8','9','10','M','M','M','K']
@@ -313,13 +309,19 @@ def move_a():
             continue
         elif tile[before_tile_x][before_tile_y][1] == 0:
             print("비어있는 칸을 움직일 수 없습니다.다시 움직여 주십시오.")
+            continue
+        elif tile[before_tile_x][before_tile_y][0] == 2:
+            print("상대의 말은 움직일 수 없습니다. 다시 움직여 주십시오.")
+            continue
         else:
             break
 
     tile[after_tile_x][after_tile_y][1] = tile[before_tile_x][before_tile_y][1]
     tile[after_tile_x][after_tile_y][0] = tile[before_tile_x][before_tile_y][0]
+    tile[after_tile_x][after_tile_y][2] = tile[before_tile_x][before_tile_y][2]
     tile[before_tile_x][before_tile_y][0] = 0
     tile[before_tile_x][before_tile_y][1] = 0
+    tile[before_tile_x][before_tile_y][2] = 0
 
     if tile[after_tile_x][after_tile_y][1] == 'K' and tile[after_tile_x][after_tile_y][0] == 1 and after_tile_x == 9:
         lose(2,'k_forward')
@@ -377,13 +379,19 @@ def move_b():
             continue
         elif tile[before_tile_x][before_tile_y][1] == 0:
             print("비어있는 칸을 움직일 수 없습니다.다시 움직여 주십시오.")
+            continue
+        elif tile[before_tile_x][before_tile_y][0] == 1:
+            print("상대의 말은 움직일 수 없습니다. 다시 움직여 주십시오.")
+            continue
         else:
             break
 
     tile[after_tile_x][after_tile_y][1] = tile[before_tile_x][before_tile_y][1]
     tile[after_tile_x][after_tile_y][0] = tile[before_tile_x][before_tile_y][0]
+    tile[after_tile_x][after_tile_y][2] = tile[before_tile_x][before_tile_y][2]
     tile[before_tile_x][before_tile_y][0] = 0
     tile[before_tile_x][before_tile_y][1] = 0
+    tile[before_tile_x][before_tile_y][2] = 0
 
     if tile[after_tile_x][after_tile_y][1] == 'K' and tile[after_tile_x][after_tile_y][0] == 2 and after_tile_x == 1:
         lose(1,'k_forward')
@@ -422,7 +430,8 @@ def meet_check(x,y):
     try:
         if tile[x][y + 1][0] != team and tile[x][y + 1][0] != 0:
             b[2] = 1
-    except:pass
+    except:
+        pass
     try:
         if tile[x][y - 1][0] != team and tile[x][y - 1][0] != 0:
             b[3] = 1
@@ -445,7 +454,7 @@ def meet_check(x,y):
         else:
             pass
     elif b_count == 2:
-        prnit("b_count =2")
+        print("b_count =2")
         b_x = 10
         b_y = 10
         c_x = 10
@@ -468,6 +477,7 @@ def meet_check(x,y):
                 b_y = y-1
                 b[3] = 0
             else: pass
+        print(b_x,b_y)
         if c_x == 10 and c_y == 10:
             if b[0] == 1:
                 c_x = x+1
@@ -514,6 +524,7 @@ def meet_check(x,y):
                 b_y = y-1
                 b[3] = 0
             else: pass
+        print(b_x,b_y)
         if c_x == 10 and c_y == 10:
             if b[0] == 1:
                 c_x = x+1
@@ -532,6 +543,7 @@ def meet_check(x,y):
                 c_y = y-1
                 b[3] = 0
             else: pass
+        print(c_x,c_y)
         if d_x == 10 and d_y == 10:
             if b[0] == 1:
                 d_x = x+1
@@ -550,6 +562,7 @@ def meet_check(x,y):
                 d_y = y-1
                 b[3] = 0
             else: pass
+        print(d_x,d_y)
         battle(x,y,b_x,b_y,c_x,c_y,d_x,d_y)
     else:pass    
               
@@ -804,13 +817,16 @@ def dead(x,y):
             tile[x][y][0]=0
             player_a_dead.append(tile[x][y][1])
             tile[x][y][1]=0
+            tile[x][y][2]=0
         elif tile [x][y][0] == 2:
             tile[x][y][0]=0
             player_b_dead.append(tile[x][y][1])
-            tile[x][y][1]=0 
+            tile[x][y][1]=0
+            tile[x][y][2] = 0
         else:
-            tile [x][y][0] = 0
-            tile [x][y][1] = 0
+            tile[x][y][0] = 0
+            tile[x][y][1] = 0
+            tile[x][y][2] = 0
 
 def lose(player, cause):
     global game_end
@@ -875,8 +891,8 @@ game_end = False
 #visualize_b()
 #input("다음과 같이 배치되었습니다.")
 #player_change('both')
-print(tile)
-print("==========================주의 사항==========================")
+#print(tile)
+#print("==========================주의 사항==========================")
 print("1.패배 조건은 다음과 같습니다.")
 print("1-1. 자신의 왕이 잡혔을 경우")
 print("1-2. 자신의 왕을 제외한 모든 말이 잡혔을 경우")
