@@ -598,8 +598,11 @@ def battle(a_x,a_y, b_x,b_y, c_x = 10, c_y = 10, d_x = 10, d_y = 10):
             none_d = True
         else:pass
     else:pass
+    tile[a_x][a_y][2] = 3
+    tile[b_x][b_y][2] = 3
+    tile[c_x][c_y][2] = 3
+    tile[d_x][d_y][2] = 3
 
-    print(c_x,c_y,d_x,d_y,none_c,none_d)
 
     
 
