@@ -1,0 +1,3 @@
+#log ignore
+log/*.txt
+game_log/*.txt
