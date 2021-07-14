@@ -1,17 +1,19 @@
+from __future__ import absolute_import, division, print_function
 #숫자장기
 #V0.0 -- 실행 불가 버전입니다.
 #V0.0.1 -- 실행 가능 버전입니다. 버그가 다소 있을 수 있습니다. hot_fix -- 맨 마지막 자리 최적화 -- 중간자리 시스템 추가 및 개편 혹은 안정화 완료-- 첫 자리
 import time as ti
+from tensorflow import keras
+
+#import 뭉탱이 (필요한거만 골라서 쓰기)
 # ******왼쪽 위 부터 1,1 오른쪽위 1,9 왼쪽 아래 6,1 오른쪽 아래 ㅗㅜㅑ
 # ******왼쪽이 player_a 오른쪽이 player_b
 
-#버그 고칠거
-#2개 만났는데 3개 만났다고 개 ㅈㄹ 하는거 (시발)
-#visible 여부에 따라서 visualize 차이 두기
-
 #제일 작은 리스트 [0]= 0(NONE)1(player_a)2(player_b) [1]=marker [2] = 0 invisible 1 player_a visible 2 player_b visible 3 visible 
-tile = [[[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]]]
+#tile = [[[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]]]
 tile = [[[0, 0, 0], [1, '10', 1], [1, 'K', 1], [0, 0, 0], [1, '1', 1], [1, '2', 1]], [[1, '9', 1], [0, 0, 0], [1, '7', 1], [1, 'M', 1], [1, '3', 1], [1, '8', 1]], [[0, 0, 0], [1, 'M', 1], [1, '4', 1], [1, '6', 1], [1, '5', 1], [1, 'M', 1]], [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]], [[2, 'M', 2], [2, '9', 2], [2, '3', 2], [2, '10', 2], [0, 0, 0], [2, '5', 2]], [[2, '7', 2], [2, '1', 2], [2, '8', 2], [2, '2', 2], [2, 'M', 2], [0, 0, 0]], [[0, 0, 0], [2, 'M', 2], [2, 'K', 2], [2, '6', 2], [2, '4', 2], [0, 0, 0]]]
+tile_for_ai_a = [0]*54
+tile_for_ai_b = [0]*54
 #리스트가 이조랄 난 이유는 잡것 폴더의 test.py 참조 (test.py 어디감)
 player_a_remain = ['1','2','3','4','5','6','7','8','9','10','M','M','M','K']
 player_b_remain = ['1','2','3','4','5','6','7','8','9','10','M','M','M','K']
@@ -607,13 +609,17 @@ def pn_to_p(player_number):
 #a가 전진 후 대결이 발생하므로 b,c,d 간의 대결은 미고려
 def battle(a_x,a_y, b_x,b_y, c_x = 10, c_y = 10, d_x = 10, d_y = 10):
     marker_a = tile[a_x][a_y][1]
+    tile[a_x][a_y][2] = 3
     marker_b = tile[b_x][b_y][1]
+    tile[b_x][b_y][2] = 3
     try:
         marker_c = tile[c_x][c_y][1]
+        tile[c_x][c_y][2] = 3
     except:
         pass
     try:
         marker_d = tile[d_x][d_y][1]
+        tile[d_x][d_y][2] = 3
     except:
         pass
     a_live = True
@@ -628,12 +634,6 @@ def battle(a_x,a_y, b_x,b_y, c_x = 10, c_y = 10, d_x = 10, d_y = 10):
             none_d = True
         else:pass
     else:pass
-    tile[a_x][a_y][2] = 3
-    tile[b_x][b_y][2] = 3
-    tile[c_x][c_y][2] = 3
-    tile[d_x][d_y][2] = 3
-
-
     
 
     print("==========대결 발생==========")
@@ -915,6 +915,74 @@ def player_change(a):
         print("현재 플레이어 : 둘 다")
     input("플레이어를 바꾼 뒤 enter키를 입력해주십시오...")
 
+#change_tile_for_AI
+def ctfa_a():
+    for number in range(54):
+        for i in range(1,11):
+            if tile[number % 9][number // 9][1] == str(i) and (tile[number % 9][number // 9][2] == 1 or tile[number % 9][number // 9][2] == 3):
+                if tile[number % 9][number // 9][0] == 1:
+                    tile_for_ai_a[number] = i
+                else:
+                    tile_for_ai_a[number] = i + 12
+                break
+        if tile[number % 9][number // 9][1] == 'M' and (tile[number % 9][number // 9][2] == 1 or tile[number % 9][number // 9][2] == 3):
+            if tile[number % 9][number // 9][0] == 1:
+                tile_for_ai_a[number] = 11
+            else:
+                tile_for_ai_a[number] = 23
+        elif tile[number % 9][number // 9][1] == 'K' and (tile[number % 9][number // 9][2] == 1 or tile[number % 9][number // 9][2] == 3):
+            if tile[number % 9][number // 9][0] == 1:
+                tile_for_ai_a[number] = 12
+            else:
+                tile_for_ai_a[number] = 24
+        elif (not tile[number % 9][number // 9][1] == 0 and not (tile[number % 9][number // 9][2] == 1 or tile[number % 9][number // 9][2] == 3)):
+            tile_for_ai_a[number] = 25
+        elif tile[number % 9][number//9][1] == 0:
+            tile_for_ai_a[number]= 0
+        else:
+            pass
+
+def ctfa_b():
+    for number in range(54):
+        for i in range(1,11):
+            if tile[number % 9][number // 9][1] == str(i) and (tile[number % 9][number // 9][2] == 2 or tile[number % 9][number // 9][2] == 3):
+                if tile[number % 9][number // 9][0] == 2:
+                    tile_for_ai_b[number] = i
+                else:
+                    tile_for_ai_b[number] = i + 12
+        if tile[number % 9][number // 9][1] == 'M' and (tile[number % 9][number // 9][2] == 2 or tile[number % 9][number // 9][2] == 3):
+            if tile[number % 9][number // 9][0] == 2:
+                tile_for_ai_b[number] = 11
+            else:
+                tile_for_ai_b[number] = 23
+        elif tile[number % 9][number // 9][1] == 'K' and (tile[number % 9][number // 9][2] == 2 or tile[number % 9][number // 9][2] == 3):
+            if tile[number % 9][number // 9][0] == 2:
+                tile_for_ai_b[number] = 12
+            else:
+                tile_for_ai_b[number] = 24
+        elif (not tile[number % 9][number // 9][1] == 0 and not (tile[number % 9][number // 9][2] == 2 or tile[number % 9][number // 9][2] == 3)):
+            tile_for_ai_b[number] = 25
+        elif tile[number % 9][number//9][1] == 0:
+            tile_for_ai_a[number]= 0
+        else:
+            pass
+
+def search_tile(marker,player):
+    for i in range(54):
+        if tile[i % 9][i // 9][1] == str(marker) and tile[i % 9][i // 9][0] == int(player):
+            x = i % 9
+            y = i // 9
+            break
+        else:pass
+    
+    return x,y
+
+def record
+#model = sequential()
+
+#model.add(keras.layers.Dense(6,9,26,activation = 'relu'))
+#model.add(keras.layers.Dense())
+
 game_end = False
 #visualize_all()
 #player_change('a')
@@ -928,13 +996,18 @@ game_end = False
 #player_change('both')
 #print(tile)
 #print("==========================주의 사항==========================")
-print("1.패배 조건은 다음과 같습니다.")
-print("1-1. 자신의 왕이 잡혔을 경우")
-print("1-2. 자신의 왕을 제외한 모든 말이 잡혔을 경우")
-print("1-3. 상대의 왕이 자신의 진영 맨 끝쪽에 도달했을 경우")
-print("1-4. 60초 이내에 어디로 말을 움직일지 결정하지 못했을 경우(단, 몇초가 지났는지는 중간에 말해주지 않고, 말을 두는 시점이 60초가 넘었는지 아닌지만 판정합니다.")
-print("2.제발 하라는 짓만 하십시오.")
+#print("1.패배 조건은 다음과 같습니다.")
+#print("1-1. 자신의 왕이 잡혔을 경우")
+#print("1-2. 자신의 왕을 제외한 모든 말이 잡혔을 경우")
+#print("1-3. 상대의 왕이 자신의 진영 맨 끝쪽에 도달했을 경우")
+#print("1-4. 60초 이내에 어디로 말을 움직일지 결정하지 못했을 경우(단, 몇초가 지났는지는 중간에 말해주지 않고, 말을 두는 시점이 60초가 넘었는지 아닌지만 판정합니다.")
+#print("2.제발 하라는 짓만 하십시오.")
 #input("==========================게임 시작==========================")
+ctfa_a()
+ctfa_b()
+
+print(tile_for_ai_a)
+print(tile_for_ai_b)
 while True:
     player_change('a')
     start_time = ti.time()
@@ -944,6 +1017,8 @@ while True:
     if game_end:
         break
     visualize_a()
+    ctfa_a()
+    ctfa_b()
     input("다음과 같이 움직였습니다.")
     player_change('b')
     start_time = ti.time()
@@ -953,9 +1028,8 @@ while True:
     if game_end:
         break
     visualize_b()
+    ctfa_a()
+    ctfa_b()
     input("다음과 같이 움직였습니다.")
 
 input("프로그램을 종료합니다.")
-
-
-
