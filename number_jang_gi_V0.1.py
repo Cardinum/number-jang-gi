@@ -4,6 +4,7 @@ from __future__ import absolute_import, division, print_function
 #V0.0.1 -- 실행 가능 버전입니다. 버그가 다소 있을 수 있습니다. hot_fix -- 맨 마지막 자리 최적화 -- 중간자리 시스템 추가 및 개편 혹은 안정화 완료-- 첫 자리
 import time as ti
 from tensorflow import keras
+import random
 
 #import 뭉탱이 (필요한거만 골라서 쓰기)
 # ******왼쪽 위 부터 1,1 오른쪽위 1,9 왼쪽 아래 6,1 오른쪽 아래 ㅗㅜㅑ
@@ -14,9 +15,22 @@ from tensorflow import keras
 tile = [[[0, 0, 0], [1, '10', 1], [1, 'K', 1], [0, 0, 0], [1, '1', 1], [1, '2', 1]], [[1, '9', 1], [0, 0, 0], [1, '7', 1], [1, 'M', 1], [1, '3', 1], [1, '8', 1]], [[0, 0, 0], [1, 'M', 1], [1, '4', 1], [1, '6', 1], [1, '5', 1], [1, 'M', 1]], [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]], [[2, 'M', 2], [2, '9', 2], [2, '3', 2], [2, '10', 2], [0, 0, 0], [2, '5', 2]], [[2, '7', 2], [2, '1', 2], [2, '8', 2], [2, '2', 2], [2, 'M', 2], [0, 0, 0]], [[0, 0, 0], [2, 'M', 2], [2, 'K', 2], [2, '6', 2], [2, '4', 2], [0, 0, 0]]]
 tile_for_ai_a = [0]*54
 tile_for_ai_b = [0]*54
+record_index_a = []
+record_tile_a = []
+record_move_a = []
+record_wl_a = []
+record_index_b = []
+record_tile_b = []
+record_move_b = []
+record_wl_b = []
+
+len_game = 0
+len_prev_game = 0
 #리스트가 이조랄 난 이유는 잡것 폴더의 test.py 참조 (test.py 어디감)
 player_a_remain = ['1','2','3','4','5','6','7','8','9','10','M','M','M','K']
 player_b_remain = ['1','2','3','4','5','6','7','8','9','10','M','M','M','K']
+player_a_alive = ['1','2','3','4','5','6','7','8','9','10','K']
+player_b_alive = ['1','2','3','4','5','6','7','8','9','10','K']
 player_a_dead = []
 player_b_dead = []
 
@@ -323,7 +337,7 @@ def move_a():
         elif dire == 4:
             after_tile_x = before_tile_x + 1
             after_tile_y = before_tile_y + 1
-        else:
+        else: 
             after_tile_x = before_tile_x 
             after_tile_y = before_tile_y + 1
 
@@ -630,9 +644,9 @@ def battle(a_x,a_y, b_x,b_y, c_x = 10, c_y = 10, d_x = 10, d_y = 10):
     none_d = False
     if c_x == 10 and c_y == 10 :
         none_c = True
-        if d_x == 10 and d_y == 10:
-            none_d = True
-        else:pass
+    else:pass
+    if d_x == 10 and d_y == 10:
+        none_d = True
     else:pass
     
 
@@ -844,18 +858,26 @@ def battle(a_x,a_y, b_x,b_y, c_x = 10, c_y = 10, d_x = 10, d_y = 10):
 def dead(x,y):
     if tile[x][y][1] == 'K':
         if tile[x][y][0] == 1:
-            lose(player_a, 'k_dead')
+            lose(1, 'k_dead')
         else:
-            lose(player_b, 'k_dead')
+            lose(2, 'k_dead')
     else:
         if tile[x][y][0] == 1:
             tile[x][y][0]=0
             player_a_dead.append(tile[x][y][1])
+            try:
+                player_a_alive.remove(tile[x][y][1])
+            except:
+                pass
             tile[x][y][1]=0
             tile[x][y][2]=0
         elif tile [x][y][0] == 2:
             tile[x][y][0]=0
             player_b_dead.append(tile[x][y][1])
+            try:
+                player_b_alive.remove(tile[x][y][1])
+            except:
+                pass
             tile[x][y][1]=0
             tile[x][y][2] = 0
         else:
@@ -973,11 +995,308 @@ def search_tile(marker,player):
             x = i % 9
             y = i // 9
             break
-        else:pass
+        else:
+            pass
     
     return x,y
 
-def record
+def random_move_a():
+    while True:
+        print("start_random_move")
+        alive_marker = len(player_a_alive)
+        select_num = random.randint(1,alive_marker)
+        selected_marker = player_a_alive[select_num - 1]
+        before_tile_x,before_tile_y = search_tile(selected_marker,1)
+        dire_check = [0,0,0,0,0] #(dire,move_size) (1,) (2,) (3,1) (3,2) (4,) (5,)
+        size_check = [0,0]
+        if before_tile_x == 7:
+            size_check[1] = 1
+            if before_tile_y == 0:
+                dire_check[0] = 1
+                dire_check[1] = 1
+            elif not tile[before_tile_x][before_tile_y - 1][1] == 0:
+                dire_check[0] = 1
+            elif not tile[before_tile_x + 1][before_tile_y - 1][1] == 0:
+                dire_check[1] = 1
+            else:pass
+            if not tile[before_tile_x + 1][before_tile_y][1] == 0:
+                size_check[0] = 1
+            if before_tile_y == 5:
+                dire_check[3] = 1
+                dire_check[4] = 1
+            elif not tile[before_tile_x + 1][before_tile_y + 1][1] == 0:
+                dire_check[3] = 1
+            elif not tile[before_tile_x][before_tile_y + 1][1] == 0:
+                dire_check[4] = 1
+            else:pass
+            
+        elif before_tile_x == 8:
+            dire_check[1] = 1
+            size_check[0] = 1
+            size_check[1] = 1
+            dire_check[3] = 1
+            if before_tile_y == 0:
+                dire_check[0] = 1
+            elif not tile[before_tile_x][before_tile_y - 1][1] == 0:
+                dire_check[0] = 1
+            else:pass
+            if before_tile_y == 5:
+                dire_check[4] = 1
+            elif not tile[before_tile_x][before_tile_y + 1][1] == 0:
+                dire_check[4] = 1
+            else:pass
+            
+        else:
+            #y끝 제외
+            if before_tile_y == 0:
+                dire_check[0] = 1
+                dire_check[1] = 1
+                if not tile[before_tile_x + 1][before_tile_y][1] == 0:
+                    size_check[0] = 1
+                if not tile[before_tile_x + 2][before_tile_y][1] == 0:
+                    size_check[0] = 1 
+                    size_check[1] = 1
+                if not tile[before_tile_x + 1][before_tile_y + 1][1] == 0:
+                    dire_check[3] = 1
+                if not tile[before_tile_x][before_tile_y + 1][1] == 0:
+                    dire_check[4] = 1
+                
+            elif before_tile_y == 5:
+                dire_check[3] = 1
+                dire_check[4] = 1
+                if not tile[before_tile_x][before_tile_y - 1][1] == 0:
+                    dire_check[0] = 1
+                if not tile[before_tile_x + 1][before_tile_y - 1][1] == 0:
+                    dire_check[1] = 1
+                if not tile[before_tile_x + 1][before_tile_y][1] == 0:
+                    size_check[0] = 1
+                if not tile[before_tile_x + 2][before_tile_y][1] == 0:
+                    size_check[0] = 1 
+                    size_check[1] = 1
+                
+            else:
+                if not tile[before_tile_x][before_tile_y - 1][1] == 0:
+                    dire_check[0] = 1
+                if not tile[before_tile_x + 1][before_tile_y - 1][1] == 0:
+                    dire_check[1] = 1
+                if not tile[before_tile_x + 1][before_tile_y][1] == 0:
+                    size_check[0] = 1
+                if not tile[before_tile_x + 2][before_tile_y][1] == 0:
+                    size_check[0] = 1 
+                    size_check[1] = 1
+                if not tile[before_tile_x + 1][before_tile_y + 1][1] == 0:
+                    dire_check[3] = 1
+                if not tile[before_tile_x][before_tile_y + 1][1] == 0:
+                    dire_check[4] = 1
+                
+
+        size_count = size_check.count(0)
+        if size_count == 0:
+            dire_check[2] =1
+        elif size_count == 1:
+            if size_check[0] == 0:
+                move_size = 1
+            else:
+                move_size = 2
+        else:
+            move_size = random.randint(1,2)
+
+        dire_list = []
+        for i in range(5):
+            if dire_check[i] == 0:
+                dire_list.append(i+1)
+            else:
+                pass
+        print("count_dire")
+        dire_count = dire_check.count(0)
+        if dire_count == 0:
+            continue
+        else:
+            print("direction_selected")
+            dire_num = random.randint(1,dire_count)
+            dire = dire_list[dire_num-1]
+            global record_move_a
+            record_move_a.append([dire,selected_marker])
+            break
+
+    if dire == 1:
+        after_tile_x = before_tile_x
+        after_tile_y = before_tile_y - 1
+    elif dire == 2:
+        after_tile_x = before_tile_x + 1
+        after_tile_y = before_tile_y - 1        
+    elif dire == 3:
+        after_tile_y= before_tile_y
+        if move_size == 1:
+            after_tile_x = before_tile_x + 1
+        else:
+            after_tile_x = before_tile_x + 2
+    elif dire == 4:
+        after_tile_x = before_tile_x + 1
+        after_tile_y = before_tile_y + 1
+    else: 
+        after_tile_x = before_tile_x 
+        after_tile_y = before_tile_y + 1
+
+    tile[after_tile_x][after_tile_y][1] = tile[before_tile_x][before_tile_y][1]
+    tile[after_tile_x][after_tile_y][0] = tile[before_tile_x][before_tile_y][0]
+    tile[after_tile_x][after_tile_y][2] = tile[before_tile_x][before_tile_y][2]
+    tile[before_tile_x][before_tile_y][0] = 0
+    tile[before_tile_x][before_tile_y][1] = 0
+    tile[before_tile_x][before_tile_y][2] = 0
+
+    if tile[after_tile_x][after_tile_y][1] == 'K' and tile[after_tile_x][after_tile_y][0] == 1 and after_tile_x == 9:
+        lose(2,'k_forward')
+
+    meet_check(after_tile_x, after_tile_y)
+
+def random_move_b():
+    while True:
+        alive_marker = len(player_b_alive)
+        select_num = random.randint(1,alive_marker)
+        selected_marker = player_b_alive[select_num-1]
+        before_tile_x,before_tile_y = search_tile(selected_marker,2)
+        dire_check = [0,0,0,0,0] #(dire,move_size) (1,) (2,) (3,1) (3,2) (4,) (5,)
+        size_check = [0,0]
+        #x 끝 제외
+        if before_tile_x == 1:
+            size_check[1] = 1
+            if before_tile_y == 0:
+                dire_check[0] = 1
+                dire_check[1] = 1
+            elif not tile[before_tile_x][before_tile_y - 1][1] == 0:
+                dire_check[0] = 1
+            elif not tile[before_tile_x - 1][before_tile_y - 1][1] == 0:
+                dire_check[1] = 1
+            else:pass
+            if not tile[before_tile_x - 1][before_tile_y][1] == 0:
+                size_check[0] = 1
+            if before_tile_y == 5:
+                dire_check[3] = 1
+                dire_check[4] = 1
+            elif not tile[before_tile_x - 1][before_tile_y + 1][1] == 0:
+                dire_check[3] = 1
+            elif not tile[before_tile_x][before_tile_y + 1][1] == 0:
+                dire_check[4] = 1
+            else:pass
+            
+        elif before_tile_x == 0:
+            dire_check[1] = 1
+            size_check[0] = 1
+            size_check[1] = 1
+            dire_check[3] = 1
+            if before_tile_y == 0:
+                dire_check[0] = 1
+            elif not tile[before_tile_x][before_tile_y - 1][1] == 0:
+                dire_check[0] = 1
+            else:pass
+            if before_tile_y == 5:
+                dire_check[4] = 1
+            elif not tile[before_tile_x][before_tile_y + 1][1] == 0:
+                dire_check[4] = 1
+            else:pass
+            
+        else:
+            #y끝 제외
+            if before_tile_y == 0:
+                dire_check[0] = 1
+                dire_check[1] = 1
+                if not tile[before_tile_x - 1][before_tile_y][1] == 0:
+                    size_check[0] = 1
+                if not tile[before_tile_x - 2][before_tile_y][1] == 0:
+                    size_check[0] = 1 
+                    size_check[1] = 1
+                if not tile[before_tile_x - 1][before_tile_y + 1][1] == 0:
+                    dire_check[3] = 1
+                if not tile[before_tile_x][before_tile_y + 1][1] == 0:
+                    dire_check[4] = 1
+                
+            elif before_tile_y == 5:
+                dire_check[3] = 1
+                dire_check[4] = 1
+                if not tile[before_tile_x][before_tile_y - 1][1] == 0:
+                    dire_check[0] = 1
+                if not tile[before_tile_x - 1][before_tile_y - 1][1] == 0:
+                    dire_check[1] = 1
+                if not tile[before_tile_x - 1][before_tile_y][1] == 0:
+                    size_check[0] = 1
+                if not tile[before_tile_x - 2][before_tile_y][1] == 0:
+                    size_check[0] = 1 
+                    size_check[1] = 1
+                
+            else:
+                if not tile[before_tile_x][before_tile_y - 1][1] == 0:
+                    dire_check[0] = 1
+                if not tile[before_tile_x - 1][before_tile_y - 1][1] == 0:
+                    dire_check[1] = 1
+                if not tile[before_tile_x - 1][before_tile_y][1] == 0:
+                    size_check[0] = 1
+                if not tile[before_tile_x - 2][before_tile_y][1] == 0:
+                    size_check[0] = 1 
+                    size_check[1] = 1
+                if not tile[before_tile_x - 1][before_tile_y + 1][1] == 0:
+                    dire_check[3] = 1
+                if not tile[before_tile_x][before_tile_y + 1][1] == 0:
+                    dire_check[4] = 1
+                
+
+        size_count = size_check.count(0)
+        if size_count == 0:
+            dire_check[2] =1
+        elif size_count == 1:
+            if size_check[0] == 0:
+                move_size = 1
+            else:
+                move_size = 2
+        else:
+            move_size = random.randint(1,2)
+
+        dire_list = []
+        for i in range(5):
+            if dire_check[i] == 0:
+                dire_list.append(i+1)
+            else:
+                pass
+
+        dire_count = dire_check.count(0)
+        if dire_count == 0:
+            continue
+        else:
+            dire_num = random.randint(1,dire_count)
+            dire = dire_list[dire_num-1]
+            break
+
+    if dire == 1:
+        after_tile_x = before_tile_x
+        after_tile_y = before_tile_y - 1
+    elif dire == 2:
+        after_tile_x = before_tile_x - 1
+        after_tile_y = before_tile_y - 1
+    elif dire == 3:
+        after_tile_y = before_tile_y
+        if move_size == 1:
+            after_tile_x = before_tile_x - 1
+        else:
+            after_tile_x = before_tile_x - 2
+    elif dire == 4:
+        after_tile_x = before_tile_x - 1
+        after_tile_y = before_tile_y + 1
+    else:
+        after_tile_x = before_tile_x 
+        after_tile_y = before_tile_y + 1
+
+    tile[after_tile_x][after_tile_y][1] = tile[before_tile_x][before_tile_y][1]
+    tile[after_tile_x][after_tile_y][0] = tile[before_tile_x][before_tile_y][0]
+    tile[after_tile_x][after_tile_y][2] = tile[before_tile_x][before_tile_y][2]
+    tile[before_tile_x][before_tile_y][0] = 0
+    tile[before_tile_x][before_tile_y][1] = 0
+    tile[before_tile_x][before_tile_y][2] = 0
+
+    if tile[after_tile_x][after_tile_y][1] == 'K' and tile[after_tile_x][after_tile_y][0] == 2 and after_tile_x == 1:
+        lose(1,'k_forward')
+
+    meet_check(after_tile_x, after_tile_y)
+    
 #model = sequential()
 
 #model.add(keras.layers.Dense(6,9,26,activation = 'relu'))
@@ -1009,27 +1328,34 @@ ctfa_b()
 print(tile_for_ai_a)
 print(tile_for_ai_b)
 while True:
-    player_change('a')
+    #player_change('a')
     start_time = ti.time()
     visualize_a()
-    move_a()
+    random_move_a()
+    record_tile_a.append(tile_for_ai_a)
     lose_check(1)
     if game_end:
         break
     visualize_a()
     ctfa_a()
     ctfa_b()
-    input("다음과 같이 움직였습니다.")
-    player_change('b')
+    #input("다음과 같이 움직였습니다.")
+    #player_change('b')
     start_time = ti.time()
     visualize_b()
-    move_b()
+    random_move_b()
+    record_tile_b.append(tile_for_ai_b)
     lose_check(2)
     if game_end:
         break
     visualize_b()
     ctfa_a()
     ctfa_b()
-    input("다음과 같이 움직였습니다.")
+    #input("다음과 같이 움직였습니다.")
+
+    len_game = len_game + 1
 
 input("프로그램을 종료합니다.")
+
+print(record_tile_a)
+print(record_tile_b)
