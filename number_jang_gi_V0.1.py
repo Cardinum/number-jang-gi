@@ -16,22 +16,7 @@ import numpy as np
 tile = [[[0, 0, 0], [1, '10', 1], [1, 'K', 1], [0, 0, 0], [1, '1', 1], [1, '2', 1]], [[1, '9', 1], [0, 0, 0], [1, '7', 1], [1, 'M', 1], [1, '3', 1], [1, '8', 1]], [[0, 0, 0], [1, 'M', 1], [1, '4', 1], [1, '6', 1], [1, '5', 1], [1, 'M', 1]], [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]], [[2, 'M', 2], [2, '9', 2], [2, '3', 2], [2, '10', 2], [0, 0, 0], [2, '5', 2]], [[2, '7', 2], [2, '1', 2], [2, '8', 2], [2, '2', 2], [2, 'M', 2], [0, 0, 0]], [[0, 0, 0], [2, 'M', 2], [2, 'K', 2], [2, '6', 2], [2, '4', 2], [0, 0, 0]]]
 tile_for_ai_a = [0]*54
 tile_for_ai_b = [0]*54
-record_index_a = []
-record_tile_a = []
-direction_ = 0
-move_size_ = 0
-marker_ = 0
-record_wl_a = []
-record_index_b = []
-record_tile_b = []
-record_wl_b = []
 
-a_win = False
-b_win = False
-
-len_a = 0
-len_b = 0
-len_prev_game = 0
 #리스트가 이조랄 난 이유는 잡것 폴더의 test.py 참조 (test.py 어디감)
 player_a_remain = ['1','2','3','4','5','6','7','8','9','10','M','M','M','K']
 player_b_remain = ['1','2','3','4','5','6','7','8','9','10','M','M','M','K']
@@ -926,10 +911,7 @@ def dead(x,y):
 
 def lose(player, cause):
     global game_end
-    global a_win
-    global b_win
     if player == 1:
-        b_win = True
         if cause == 'k_dead':
             print("player_a : 패배 player_b : 승리")
             print("패배 이유 : player_a의 왕이 잡혔습니다.")
@@ -949,7 +931,6 @@ def lose(player, cause):
         else:
             print("버그 발생 오류코드:lose_cause_error")
     else:
-        a_win = True
         if cause == 'k_dead':
             print("player_a : 승리 player_b : 패배")
             print("패배 이유 : player_b의 왕이 잡혔습니다.")
@@ -1379,98 +1360,97 @@ def reset_record_tile():
     record_index_b = []
     record_tile_b = []
     record_wl_b = []
-#model = sequential()
 
-#model.add(keras.layers.Dense(6,9,26,activation = 'relu'))
-#model.add(keras.layers.Dense())
+def reset_tile():
+    global tile
+    global tile_for_ai_a
+    global tile_for_ai_b
+    global game_end
+    global player_a_alive
+    global player_b_alive
+    global player_a_dead
+    global player_b_dead
+
+    tile = [[[0, 0, 0], [1, '10', 1], [1, 'K', 1], [0, 0, 0], [1, '1', 1], [1, '2', 1]], [[1, '9', 1], [0, 0, 0], [1, '7', 1], [1, 'M', 1], [1, '3', 1], [1, '8', 1]], [[0, 0, 0], [1, 'M', 1], [1, '4', 1], [1, '6', 1], [1, '5', 1], [1, 'M', 1]], [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]], [[2, 'M', 2], [2, '9', 2], [2, '3', 2], [2, '10', 2], [0, 0, 0], [2, '5', 2]], [[2, '7', 2], [2, '1', 2], [2, '8', 2], [2, '2', 2], [2, 'M', 2], [0, 0, 0]], [[0, 0, 0], [2, 'M', 2], [2, 'K', 2], [2, '6', 2], [2, '4', 2], [0, 0, 0]]]
+    tile_for_ai_a = [0]*54
+    tile_for_ai_b = [0]*54
+    player_a_alive = ['1','2','3','4','5','6','7','8','9','10','K']
+    player_b_alive = ['1','2','3','4','5','6','7','8','9','10','K']
+    player_a_dead = []
+    player_b_dead = []
+
+def AI_move_a():
+    pass
+
+def AI_move_b():
+    pass
+
+
 
 game_end = False
+kill_game = False
 ctfa_a()
 ctfa_b()
 
 print(tile_for_ai_a)
 print(tile_for_ai_b)
-for _ in range(78):
-
-    while True:
-        #player_change('a')
-        start_time = ti.time()
-        print("a움직 전")
-        visualize()
-        record_tile_a.append(tile_for_ai_a[:])
-        random_move_a()
-        record_tile_a[-1].extend([direction_, move_size_, marker_])
-        lose_check(1)
-        if game_end:
+while True:
+    #player_change('a')
+    start_time = ti.time()
+    print("a움직 전")
+    visualize()
+    random_move_a()
+    input(")")
+    lose_check(1)
+    if game_end:
+        print("게임 종료")
+        while True:
+            user_input = input("다시 하시겠습니까?(Y/N)")
+            if user_input == 'Y' or user_input == 'y' or user_input == 'ㅛ':
+                print("타일을 리셋 중 입니다.")
+                reset_tile()
+                break
+            elif user_input == 'N' or user_input == 'n' or user_input == 'ㅜ':
+                print("게임을 종료합니다.")
+                kill_game = True
+                break
+            else:
+                print("입력 오류 입니다.")
+                continue
+        if kill_game:
             break
-        print("a움직 후")
-        visualize()
-        ctfa_a()
-        ctfa_b()
-        #input("다음과 같이 움직였습니다.")
-        #player_change('b')
-        start_time = ti.time()
-        print("b 움직 전")
-        visualize()
-        record_tile_b.append(tile_for_ai_b[:])
-        random_move_b()
-        record_tile_b[-1].extend([direction_, move_size_, marker_])
-        lose_check(2)
-        if game_end:
+    print("a움직 후")
+    visualize()
+    ctfa_a()
+    ctfa_b()
+    #input("다음과 같이 움직였습니다.")
+    #player_change('b')
+    start_time = ti.time()
+    print("b 움직 전")
+    visualize()
+    random_move_b()
+    lose_check(2)
+    if game_end:
+        print("게임 종료")
+        while True:
+            user_input = input("다시 하시겠습니까?(Y/N)")
+            if user_input == 'Y' or user_input == 'y' or user_input == 'ㅛ':
+                print("타일을 리셋 중 입니다.")
+                reset_tile()
+                break
+            elif user_input == 'N' or user_input == 'n' or user_input == 'ㅜ':
+                print("게임을 종료합니다.")
+                kill_game = True
+                break
+            else:
+                print("입력 오류 입니다.")
+                continue
+        if kill_game:
             break
-        print("b 움직 후")
-        visualize()
-        ctfa_a()
-        ctfa_b()
-        #input("다음과 같이 움직였습니다.")
-        
-    len_a = len(record_tile_a)
-    len_b = len(record_tile_b)
+    print("b 움직 후")
+    visualize()
+    ctfa_a()
+    ctfa_b()
+    #input("다음과 같이 움직였습니다.")
 
-    if a_win:
-        record_wl_a = [1] * len_a
-        record_wl_b = [0] * len_b
-    else:
-        record_wl_b = [1] * len_b
-        record_wl_a = [0] * len_a
-
-
-    
-    data_a = open(r".\data\record_a_data.txt","a")
-    data_a.write(str(record_tile_a))
-    data_a.close()
-    data_b = open(r".\data\record_b_data.txt","a")
-    data_b.write(str(record_tile_b))
-    data_b.close()
-    data_a = open(r".\data\record_a_target.txt","a")
-    data_a.write(str(record_wl_a))
-    data_a.close()
-    data_b = open(r".\data\record_b_target.txt","a")
-    data_b.write(str(record_wl_b))
-    data_b.close()
-
-    tile = [[[0, 0, 0], [1, '10', 1], [1, 'K', 1], [0, 0, 0], [1, '1', 1], [1, '2', 1]], [[1, '9', 1], [0, 0, 0], [1, '7', 1], [1, 'M', 1], [1, '3', 1], [1, '8', 1]], [[0, 0, 0], [1, 'M', 1], [1, '4', 1], [1, '6', 1], [1, '5', 1], [1, 'M', 1]], [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]], [[2, 'M', 2], [2, '9', 2], [2, '3', 2], [2, '10', 2], [0, 0, 0], [2, '5', 2]], [[2, '7', 2], [2, '1', 2], [2, '8', 2], [2, '2', 2], [2, 'M', 2], [0, 0, 0]], [[0, 0, 0], [2, 'M', 2], [2, 'K', 2], [2, '6', 2], [2, '4', 2], [0, 0, 0]]]
-    tile_for_ai_a = [0]*54
-    tile_for_ai_b = [0]*54
-    record_index_a = []
-    record_tile_a = []
-    direction_ = 0
-    move_size_ = 0
-    marker_ = 0
-    record_wl_a = []
-    record_index_b = []
-    record_tile_b = []
-    record_wl_b = []
-
-    a_win = False
-    b_win = False
-
-    len_a = 0
-    len_b = 0
-    len_prev_game = 0
-    game_end = False
-    player_a_alive = ['1','2','3','4','5','6','7','8','9','10','K']
-    player_b_alive = ['1','2','3','4','5','6','7','8','9','10','K']
-    player_a_dead = []
-    player_b_dead = []
 input("프로그램을 종료합니다.")
