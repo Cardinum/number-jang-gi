@@ -13,9 +13,17 @@ import numpy as np
 
 #제일 작은 리스트 [0]= 0(NONE)1(player_a)2(player_b) [1]=marker [2] = 0 invisible 1 player_a visible 2 player_b visible 3 visible 
 #tile = [[[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]]]
-tile = [[[0, 0, 0], [1, '10', 1], [1, 'K', 1], [0, 0, 0], [1, '1', 1], [1, '2', 1]], [[1, '9', 1], [0, 0, 0], [1, '7', 1], [1, 'M', 1], [1, '3', 1], [1, '8', 1]], [[0, 0, 0], [1, 'M', 1], [1, '4', 1], [1, '6', 1], [1, '5', 1], [1, 'M', 1]], [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]], [[2, 'M', 2], [2, '9', 2], [2, '3', 2], [2, '10', 2], [0, 0, 0], [2, '5', 2]], [[2, '7', 2], [2, '1', 2], [2, '8', 2], [2, '2', 2], [2, 'M', 2], [0, 0, 0]], [[0, 0, 0], [2, 'M', 2], [2, 'K', 2], [2, '6', 2], [2, '4', 2], [0, 0, 0]]]
+tile = [[[0, 0, 0], [1, 'M', 1], [1, 'K', 1], [1, '6', 1], [1, '4', 1], [0, 0, 0]], [[1, '7', 1], [1, '1', 1], [1, '8', 1], [1, '2', 1], [1, 'M', 1], [0, 0, 0]], [[1, 'M', 1], [1, '9', 1], [1, '3', 1], [1, '10', 1], [0, 0, 0], [1, '5', 1]], [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]], [[2, 'M', 2], [2, '9', 2], [2, '3', 2], [2, '10', 2], [0, 0, 0], [2, '5', 2]], [[2, '7', 2], [2, '1', 2], [2, '8', 2], [2, '2', 2], [2, 'M', 2], [0, 0, 0]], [[0, 0, 0], [2, 'M', 2], [2, 'K', 2], [2, '6', 2], [2, '4', 2], [0, 0, 0]]]
 tile_for_ai_a = [0]*54
 tile_for_ai_b = [0]*54
+
+dire_move = [0,0]
+marker = [0]
+tile_ = []
+scaled_tile_ = []
+move_direction = 0 
+move_size = 0
+move_marker = 0
 
 #리스트가 이조랄 난 이유는 잡것 폴더의 test.py 참조 (test.py 어디감)
 player_a_remain = ['1','2','3','4','5','6','7','8','9','10','M','M','M','K']
@@ -505,7 +513,6 @@ def meet_check(x,y):
         pass
 
     b_count= b.count(1)
-    print(b)
     if b_count == 0:
         pass
     elif b_count == 1:
@@ -520,7 +527,6 @@ def meet_check(x,y):
         else:
             pass
     elif b_count == 2:
-        print("b_count =2")
         b_x = 10
         b_y = 10
         c_x = 10
@@ -543,7 +549,6 @@ def meet_check(x,y):
                 b_y = y-1
                 b[3] = 0
             else: pass
-        print(b_x,b_y)
         if c_x == 10 and c_y == 10:
             if b[0] == 1:
                 c_x = x+1
@@ -562,10 +567,8 @@ def meet_check(x,y):
                 c_y = y-1
                 b[3] = 0
             else: pass
-        print(c_x,c_y)
         battle(x,y,b_x,b_y,c_x,c_y)
     elif b_count == 3:
-        print("b_count = 3")
         b_x = 10
         b_y = 10
         c_x = 10
@@ -590,7 +593,6 @@ def meet_check(x,y):
                 b_y = y-1
                 b[3] = 0
             else: pass
-        print(b_x,b_y)
         if c_x == 10 and c_y == 10:
             if b[0] == 1:
                 c_x = x+1
@@ -609,7 +611,6 @@ def meet_check(x,y):
                 c_y = y-1
                 b[3] = 0
             else: pass
-        print(c_x,c_y)
         if d_x == 10 and d_y == 10:
             if b[0] == 1:
                 d_x = x+1
@@ -628,7 +629,6 @@ def meet_check(x,y):
                 d_y = y-1
                 b[3] = 0
             else: pass
-        print(d_x,d_y)
         battle(x,y,b_x,b_y,c_x,c_y,d_x,d_y)
     else:pass    
               
@@ -963,6 +963,7 @@ def player_change(a):
 
 #change_tile_for_AI
 def ctfa_a():
+    global tile_for_ai_a
     for number in range(54):
         for i in range(1,11):
             if tile[number % 9][number // 9][1] == str(i) and (tile[number % 9][number // 9][2] == 1 or tile[number % 9][number // 9][2] == 3):
@@ -989,6 +990,7 @@ def ctfa_a():
             pass
 
 def ctfa_b():
+    global tile_for_ai_b
     for number in range(54):
         for i in range(1,11):
             if tile[number % 9][number // 9][1] == str(i) and (tile[number % 9][number // 9][2] == 2 or tile[number % 9][number // 9][2] == 3):
@@ -1039,7 +1041,6 @@ def search_tile(marker,player):
 def random_move_a():
     global tile
     while True:
-        print("start_random_move")
         alive_marker = len(player_a_alive)
         select_num = random.randint(1,alive_marker)
         selected_marker = player_a_alive[select_num - 1]
@@ -1146,20 +1147,14 @@ def random_move_a():
                 dire_list.append(i+1)
             else:
                 pass
-        print("count_dire")
         dire_count = dire_check.count(0)
         if dire_count == 0:
             continue
         else:
-            print("direction_selected")
             dire_num = random.randint(1,dire_count)
             dire = dire_list[dire_num-1]
             if dire != 3:
                 move_size = 1 
-            global direction_, move_size_, marker_
-            direction_ = dire
-            move_size_ = move_size
-            marker_ = cmtn(selected_marker)
             break
 
     if dire == 1:
@@ -1312,10 +1307,6 @@ def random_move_b():
             dire = dire_list[dire_num-1]
             if dire != 3:
                 move_size = 1 
-            global direction_, move_size_, marker_
-            direction_ = dire
-            move_size_ = move_size
-            marker_ = cmtn(selected_marker)
             break
 
     if dire == 1:
@@ -1380,10 +1371,283 @@ def reset_tile():
     player_b_dead = []
 
 def AI_move_a():
-    pass
+    global tile_
+    global tile_for_ai_a
+    global dire_move
+    global marker
+    global player_a_alive
+    value_list = []
+    for i in range(6):
+        if i < 3:
+            dire_move[0] = i
+            dire_move[1] = 1
+        elif i > 4:
+            dire_move[0] = i - 1
+            dire_move[1] = 1
+        else:
+            dire_move[0] = 3
+            dire_move[1] = i - 2
+        for j in range(11):
+            legal_move = True
+            if j < 10:
+                marker[0] = j + 1
+                if str( j + 1 ) in player_a_alive: 
+                    x, y = search_tile(str( j + 1 ),1)
+                else:
+                    x= 999
+                    y= 999
+            else:
+                marker[0] = 12
+                if 'K' in player_a_alive:
+                    x, y = search_tile('K',1)
+                else:
+                    x= 999
+                    y= 999
+
+            if i == 0:
+                if y == 0:
+                    legal_move = False 
+                elif x == 999 or y == 999:
+                    legal_move = False
+                elif not tile [x][y-1][1] == 0:
+                    legal_move = False
+                else:pass
+            elif i == 1:
+                if y == 0 or x == 8:
+                    legal_move = False
+                elif x == 999 or y == 999:
+                    legal_move = False
+                elif not tile [x+1][y-1][1] == 0:
+                    legal_move = False
+                else:pass
+            elif i == 2:
+                if x == 8:
+                    legal_move = False
+                elif x == 999 or y == 999:
+                    legal_move = False
+                elif not tile [x+1][y][1] == 0:
+                    legal_move = False
+                else:pass
+            elif i == 3:
+                if x == 8 or x == 7:
+                    legal_move = False
+                elif x == 999 or y == 999:
+                    legal_move = False
+                elif not tile [x+2][y][1] == 0 or not tile[x+1][y][1] == 0:
+                    legal_move = False
+                else:pass
+            elif i == 4:
+                if x == 8 or y == 5:
+                    legal_move = False
+                elif x == 999 or y == 999:
+                    legal_move = False
+                elif not tile [x+1][y+1][1] == 0:
+                    legal_move = False
+                else:pass
+            else:
+                if y == 5:
+                    legal_move = False
+                elif x == 999 or y == 999:
+                    legal_move = False
+                elif not tile [x][y+1][1] == 0:
+                    legal_move = False
+                else:pass
+            if legal_move:
+
+                tile_ = tile_for_ai_a[:]
+                tile_.extend(dire_move)
+                tile_.extend(marker)
+                tile_scaled = np.array([tile_]) / 25
+                model = keras.models.load_model('a_side_best-model_adam.h5')
+                value = model.predict(tile_scaled)
+                value_in_list = value.tolist()
+                value_list.append(value_in_list[0][0])
+            else:
+                value_list.append(0.0)
+    max_value_index = value_list.index(max(value_list))
+    print(value_list)
+    if max_value_index // 11 < 2:
+        dire = (max_value_index // 11) + 1
+        move_size = 1
+    elif max_value_index // 11 > 3:
+        dire = (max_value_index // 11) 
+        move_size = 1
+    else:
+        dire = 3
+        move_size = (max_value_index // 11) - 1 
+    for j in range (11):
+        if max_value_index % 11 == 10:
+            before_tile_x,before_tile_y = search_tile('K',1)
+        else:
+            before_tile_x,before_tile_y = search_tile(str((max_value_index % 11) + 1),1)
+    
+    if dire == 1:
+        after_tile_x = before_tile_x
+        after_tile_y = before_tile_y - 1
+    elif dire == 2:
+        after_tile_x = before_tile_x + 1
+        after_tile_y = before_tile_y - 1        
+    elif dire == 3:
+        after_tile_y= before_tile_y
+        if move_size == 1:
+            after_tile_x = before_tile_x + 1
+        else:
+            after_tile_x = before_tile_x + 2
+    elif dire == 4:
+        after_tile_x = before_tile_x + 1
+        after_tile_y = before_tile_y + 1
+    else: 
+        after_tile_x = before_tile_x 
+        after_tile_y = before_tile_y + 1
+
+    tile[after_tile_x][after_tile_y][1] = tile[before_tile_x][before_tile_y][1]
+    tile[after_tile_x][after_tile_y][0] = tile[before_tile_x][before_tile_y][0]
+    tile[after_tile_x][after_tile_y][2] = tile[before_tile_x][before_tile_y][2]
+    tile[before_tile_x][before_tile_y][0] = 0
+    tile[before_tile_x][before_tile_y][1] = 0
+    tile[before_tile_x][before_tile_y][2] = 0
+
+    if tile[after_tile_x][after_tile_y][1] == 'K' and tile[after_tile_x][after_tile_y][0] == 1 and after_tile_x == 8:
+        lose(2,'k_forward')
+
+    meet_check(after_tile_x, after_tile_y)    
 
 def AI_move_b():
-    pass
+    global tile_
+    global tile_for_ai_b
+    global dire_move
+    global marker
+    global player_b_alive
+    value_list = []
+    for i in range(6):
+        if i < 2:
+            dire_move[0] = i + 1
+            dire_move[1] = 1
+        elif i > 3:
+            dire_move[0] = i
+            dire_move[1] = 1
+        else:
+            dire_move[0] = 3
+            dire_move[1] = i - 1
+        for j in range(11):
+            legal_move = True
+            if j < 10:
+                marker[0] = j + 1
+                if str( j + 1 ) in player_b_alive: 
+                    x, y = search_tile(str( j + 1 ),2)
+                else:
+                    x= 999
+                    y= 999
+            else:
+                marker[0] = 12
+                if 'K' in player_b_alive:
+                    x, y = search_tile('K',2)
+                else:
+                    x= 999
+                    y= 999
+
+            if i == 0:
+                if y == 0:
+                    legal_move = False
+                elif x == 999 or y == 999:
+                    legal_move = False
+                elif not tile [x][y-1][1] == 0:
+                    legal_move = False
+            elif i == 1:
+                if y == 0 or x == 0:
+                    legal_move = False
+                elif x == 999 or y == 999:
+                    legal_move = False
+                elif not tile [x-1][y-1][1] == 0:
+                    legal_move = False
+            elif i == 2:
+                if x == 0:
+                    legal_move = False
+                elif x == 999 or y == 999:
+                    legal_move = False
+                elif not tile [x-1][y][1] == 0:
+                    legal_move = False
+            elif i == 3:
+                if x == 0 or x == 1:
+                    legal_move = False
+                elif x == 999 or y == 999:
+                    legal_move = False
+                elif not tile [x-2][y][1] == 0 or not tile[x-1][y][1] == 0:
+                    legal_move = False
+            elif i == 4:
+                if x == 0 or y == 5:
+                    legal_move = False
+                elif x == 999 or y == 999:
+                    legal_move = False
+                elif not tile [x-1][y+1][1] == 0:
+                    legal_move = False
+            else:
+                if y == 5:
+                    legal_move = False
+                elif x == 999 or y == 999:
+                    legal_move = False
+                elif not tile [x][y+1][1] == 0:
+                    legal_move = False
+            if legal_move:
+
+                tile_ = tile_for_ai_b[:]
+                tile_.extend(dire_move)
+                tile_.extend(marker)
+                tile_scaled = np.array([tile_]) / 25
+                model = keras.models.load_model('b_side_best-model_adam.h5')
+                value = model.predict(tile_scaled)
+                value_in_list = value.tolist()
+                value_list.append(value_in_list[0][0])
+            else:
+                value_list.append(0.0)
+    max_value_index = value_list.index(max(value_list))
+    print(max_value_index)
+    print(value_list)
+    if max_value_index // 11 < 2:
+        dire = (max_value_index // 11) + 1
+        move_size = 1
+    elif max_value_index // 11 > 3:
+        dire = (max_value_index // 11) 
+        move_size = 1
+    else:
+        dire = 3
+        move_size = (max_value_index // 11) - 1 
+    for j in range (11):
+        if max_value_index % 11 == 10:
+            before_tile_x,before_tile_y = search_tile('K',2)
+        else:
+            before_tile_x,before_tile_y = search_tile(str((max_value_index % 11) + 1),2)
+    
+    if dire == 1:
+        after_tile_x = before_tile_x
+        after_tile_y = before_tile_y - 1
+    elif dire == 2:
+        after_tile_x = before_tile_x - 1
+        after_tile_y = before_tile_y - 1
+    elif dire == 3:
+        after_tile_y = before_tile_y
+        if move_size == 1:
+            after_tile_x = before_tile_x - 1
+        else:
+            after_tile_x = before_tile_x - 2
+    elif dire == 4:
+        after_tile_x = before_tile_x - 1
+        after_tile_y = before_tile_y + 1
+    else:
+        after_tile_x = before_tile_x 
+        after_tile_y = before_tile_y + 1
+
+    tile[after_tile_x][after_tile_y][1] = tile[before_tile_x][before_tile_y][1]
+    tile[after_tile_x][after_tile_y][0] = tile[before_tile_x][before_tile_y][0]
+    tile[after_tile_x][after_tile_y][2] = tile[before_tile_x][before_tile_y][2]
+    tile[before_tile_x][before_tile_y][0] = 0
+    tile[before_tile_x][before_tile_y][1] = 0
+    tile[before_tile_x][before_tile_y][2] = 0
+
+    if tile[after_tile_x][after_tile_y][1] == 'K' and tile[after_tile_x][after_tile_y][0] == 2 and after_tile_x == 0:
+        lose(1,'k_forward')
+
+    meet_check(after_tile_x, after_tile_y)
 
 
 
@@ -1392,15 +1656,11 @@ kill_game = False
 ctfa_a()
 ctfa_b()
 
-print(tile_for_ai_a)
-print(tile_for_ai_b)
 while True:
+    game_end = False
     #player_change('a')
     start_time = ti.time()
-    print("a움직 전")
-    visualize()
-    random_move_a()
-    input(")")
+    AI_move_a()
     lose_check(1)
     if game_end:
         print("게임 종료")
@@ -1425,10 +1685,9 @@ while True:
     ctfa_b()
     #input("다음과 같이 움직였습니다.")
     #player_change('b')
+    game_end = False
     start_time = ti.time()
-    print("b 움직 전")
-    visualize()
-    random_move_b()
+    AI_move_b()
     lose_check(2)
     if game_end:
         print("게임 종료")
