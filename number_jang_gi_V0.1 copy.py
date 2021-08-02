@@ -910,8 +910,11 @@ def dead(x,y):
             tile[x][y][2] = 0
 
 def lose(player, cause):
+    global a_win
+    global b_win
     global game_end
     if player == 1:
+        b_win = True
         if cause == 'k_dead':
             print("player_a : 패배 player_b : 승리")
             print("패배 이유 : player_a의 왕이 잡혔습니다.")
@@ -931,6 +934,7 @@ def lose(player, cause):
         else:
             print("버그 발생 오류코드:lose_cause_error")
     else:
+        a_win = True
         if cause == 'k_dead':
             print("player_a : 승리 player_b : 패배")
             print("패배 이유 : player_b의 왕이 잡혔습니다.")
@@ -1370,7 +1374,7 @@ def reset_tile():
     player_a_dead = []
     player_b_dead = []
 
-def AI_move_a():
+def AI_adam_move_a():
     global tile_
     global tile_for_ai_a
     global dire_move
@@ -1512,7 +1516,149 @@ def AI_move_a():
 
     meet_check(after_tile_x, after_tile_y)    
 
-def AI_move_b():
+def AI_RMS_move_a():
+    global tile_
+    global tile_for_ai_a
+    global dire_move
+    global marker
+    global player_a_alive
+    value_list = []
+    for i in range(6):
+        if i < 3:
+            dire_move[0] = i
+            dire_move[1] = 1
+        elif i > 4:
+            dire_move[0] = i - 1
+            dire_move[1] = 1
+        else:
+            dire_move[0] = 3
+            dire_move[1] = i - 2
+        for j in range(11):
+            legal_move = True
+            if j < 10:
+                marker[0] = j + 1
+                if str( j + 1 ) in player_a_alive: 
+                    x, y = search_tile(str( j + 1 ),1)
+                else:
+                    x= 999
+                    y= 999
+            else:
+                marker[0] = 12
+                if 'K' in player_a_alive:
+                    x, y = search_tile('K',1)
+                else:
+                    x= 999
+                    y= 999
+
+            if i == 0:
+                if y == 0:
+                    legal_move = False 
+                elif x == 999 or y == 999:
+                    legal_move = False
+                elif not tile [x][y-1][1] == 0:
+                    legal_move = False
+                else:pass
+            elif i == 1:
+                if y == 0 or x == 8:
+                    legal_move = False
+                elif x == 999 or y == 999:
+                    legal_move = False
+                elif not tile [x+1][y-1][1] == 0:
+                    legal_move = False
+                else:pass
+            elif i == 2:
+                if x == 8:
+                    legal_move = False
+                elif x == 999 or y == 999:
+                    legal_move = False
+                elif not tile [x+1][y][1] == 0:
+                    legal_move = False
+                else:pass
+            elif i == 3:
+                if x == 8 or x == 7:
+                    legal_move = False
+                elif x == 999 or y == 999:
+                    legal_move = False
+                elif not tile [x+2][y][1] == 0 or not tile[x+1][y][1] == 0:
+                    legal_move = False
+                else:pass
+            elif i == 4:
+                if x == 8 or y == 5:
+                    legal_move = False
+                elif x == 999 or y == 999:
+                    legal_move = False
+                elif not tile [x+1][y+1][1] == 0:
+                    legal_move = False
+                else:pass
+            else:
+                if y == 5:
+                    legal_move = False
+                elif x == 999 or y == 999:
+                    legal_move = False
+                elif not tile [x][y+1][1] == 0:
+                    legal_move = False
+                else:pass
+            if legal_move:
+
+                tile_ = tile_for_ai_a[:]
+                tile_.extend(dire_move)
+                tile_.extend(marker)
+                tile_scaled = np.array([tile_]) / 25
+                model = keras.models.load_model('a_side_best-model_RMSprop.h5')
+                value = model.predict(tile_scaled)
+                value_in_list = value.tolist()
+                value_list.append(value_in_list[0][0])
+            else:
+                value_list.append(0.0)
+    max_value_index = value_list.index(max(value_list))
+    print(value_list)
+    if max_value_index // 11 < 2:
+        dire = (max_value_index // 11) + 1
+        move_size = 1
+    elif max_value_index // 11 > 3:
+        dire = (max_value_index // 11) 
+        move_size = 1
+    else:
+        dire = 3
+        move_size = (max_value_index // 11) - 1 
+    for j in range (11):
+        if max_value_index % 11 == 10:
+            before_tile_x,before_tile_y = search_tile('K',1)
+        else:
+            before_tile_x,before_tile_y = search_tile(str((max_value_index % 11) + 1),1)
+    
+    if dire == 1:
+        after_tile_x = before_tile_x
+        after_tile_y = before_tile_y - 1
+    elif dire == 2:
+        after_tile_x = before_tile_x + 1
+        after_tile_y = before_tile_y - 1        
+    elif dire == 3:
+        after_tile_y= before_tile_y
+        if move_size == 1:
+            after_tile_x = before_tile_x + 1
+        else:
+            after_tile_x = before_tile_x + 2
+    elif dire == 4:
+        after_tile_x = before_tile_x + 1
+        after_tile_y = before_tile_y + 1
+    else: 
+        after_tile_x = before_tile_x 
+        after_tile_y = before_tile_y + 1
+
+    tile[after_tile_x][after_tile_y][1] = tile[before_tile_x][before_tile_y][1]
+    tile[after_tile_x][after_tile_y][0] = tile[before_tile_x][before_tile_y][0]
+    tile[after_tile_x][after_tile_y][2] = tile[before_tile_x][before_tile_y][2]
+    tile[before_tile_x][before_tile_y][0] = 0
+    tile[before_tile_x][before_tile_y][1] = 0
+    tile[before_tile_x][before_tile_y][2] = 0
+
+    if tile[after_tile_x][after_tile_y][1] == 'K' and tile[after_tile_x][after_tile_y][0] == 1 and after_tile_x == 8:
+        lose(2,'k_forward')
+
+    meet_check(after_tile_x, after_tile_y)    
+
+def AI_RMS_move_b():
     global tile_
     global tile_for_ai_b
     global dire_move
@@ -1649,36 +1795,187 @@ def AI_move_b():
 
     meet_check(after_tile_x, after_tile_y)
 
+def AI_adam_move_b():
+    global tile_
+    global tile_for_ai_b
+    global dire_move
+    global marker
+    global player_b_alive
+    value_list = []
+    for i in range(6):
+        if i < 2:
+            dire_move[0] = i + 1
+            dire_move[1] = 1
+        elif i > 3:
+            dire_move[0] = i
+            dire_move[1] = 1
+        else:
+            dire_move[0] = 3
+            dire_move[1] = i - 1
+        for j in range(11):
+            legal_move = True
+            if j < 10:
+                marker[0] = j + 1
+                if str( j + 1 ) in player_b_alive: 
+                    x, y = search_tile(str( j + 1 ),2)
+                else:
+                    x= 999
+                    y= 999
+            else:
+                marker[0] = 12
+                if 'K' in player_b_alive:
+                    x, y = search_tile('K',2)
+                else:
+                    x= 999
+                    y= 999
 
+            if i == 0:
+                if y == 0:
+                    legal_move = False
+                elif x == 999 or y == 999:
+                    legal_move = False
+                elif not tile [x][y-1][1] == 0:
+                    legal_move = False
+            elif i == 1:
+                if y == 0 or x == 0:
+                    legal_move = False
+                elif x == 999 or y == 999:
+                    legal_move = False
+                elif not tile [x-1][y-1][1] == 0:
+                    legal_move = False
+            elif i == 2:
+                if x == 0:
+                    legal_move = False
+                elif x == 999 or y == 999:
+                    legal_move = False
+                elif not tile [x-1][y][1] == 0:
+                    legal_move = False
+            elif i == 3:
+                if x == 0 or x == 1:
+                    legal_move = False
+                elif x == 999 or y == 999:
+                    legal_move = False
+                elif not tile [x-2][y][1] == 0 or not tile[x-1][y][1] == 0:
+                    legal_move = False
+            elif i == 4:
+                if x == 0 or y == 5:
+                    legal_move = False
+                elif x == 999 or y == 999:
+                    legal_move = False
+                elif not tile [x-1][y+1][1] == 0:
+                    legal_move = False
+            else:
+                if y == 5:
+                    legal_move = False
+                elif x == 999 or y == 999:
+                    legal_move = False
+                elif not tile [x][y+1][1] == 0:
+                    legal_move = False
+            if legal_move:
 
+                tile_ = tile_for_ai_b[:]
+                tile_.extend(dire_move)
+                tile_.extend(marker)
+                tile_scaled = np.array([tile_]) / 25
+                model = keras.models.load_model('b_side_best-model_adam.h5')
+                value = model.predict(tile_scaled)
+                value_in_list = value.tolist()
+                value_list.append(value_in_list[0][0])
+            else:
+                value_list.append(0.0)
+    max_value_index = value_list.index(max(value_list))
+    print(max_value_index)
+    print(value_list)
+    if max_value_index // 11 < 2:
+        dire = (max_value_index // 11) + 1
+        move_size = 1
+    elif max_value_index // 11 > 3:
+        dire = (max_value_index // 11) 
+        move_size = 1
+    else:
+        dire = 3
+        move_size = (max_value_index // 11) - 1 
+    for j in range (11):
+        if max_value_index % 11 == 10:
+            before_tile_x,before_tile_y = search_tile('K',2)
+        else:
+            before_tile_x,before_tile_y = search_tile(str((max_value_index % 11) + 1),2)
+    
+    if dire == 1:
+        after_tile_x = before_tile_x
+        after_tile_y = before_tile_y - 1
+    elif dire == 2:
+        after_tile_x = before_tile_x - 1
+        after_tile_y = before_tile_y - 1
+    elif dire == 3:
+        after_tile_y = before_tile_y
+        if move_size == 1:
+            after_tile_x = before_tile_x - 1
+        else:
+            after_tile_x = before_tile_x - 2
+    elif dire == 4:
+        after_tile_x = before_tile_x - 1
+        after_tile_y = before_tile_y + 1
+    else:
+        after_tile_x = before_tile_x 
+        after_tile_y = before_tile_y + 1
+
+    tile[after_tile_x][after_tile_y][1] = tile[before_tile_x][before_tile_y][1]
+    tile[after_tile_x][after_tile_y][0] = tile[before_tile_x][before_tile_y][0]
+    tile[after_tile_x][after_tile_y][2] = tile[before_tile_x][before_tile_y][2]
+    tile[before_tile_x][before_tile_y][0] = 0
+    tile[before_tile_x][before_tile_y][1] = 0
+    tile[before_tile_x][before_tile_y][2] = 0
+
+    if tile[after_tile_x][after_tile_y][1] == 'K' and tile[after_tile_x][after_tile_y][0] == 2 and after_tile_x == 0:
+        lose(1,'k_forward')
+
+    meet_check(after_tile_x, after_tile_y)
+
+def cycle_add():
+    global cycle
+    cycle = cycle + 1
+
+def cycle_check_add():
+    global cycle
+    global game_end
+    if cycle > 100:
+        game_end = True
+    cycle = cycle + 1
+
+def cycle_reset():
+    global cycle
+    cycle = 0
 game_end = False
 kill_game = False
 ctfa_a()
 ctfa_b()
+a_win = False
+b_win = False
+cycle = 0
+#adam vs adam
 
 while True:
     game_end = False
     #player_change('a')
     start_time = ti.time()
-    AI_move_a()
+    AI_adam_move_a()
     lose_check(1)
+    cycle_check_add()
     if game_end:
+        cycle_reset()
         print("게임 종료")
-        while True:
-            user_input = input("다시 하시겠습니까?(Y/N)")
-            if user_input == 'Y' or user_input == 'y' or user_input == 'ㅛ':
-                print("타일을 리셋 중 입니다.")
-                reset_tile()
-                break
-            elif user_input == 'N' or user_input == 'n' or user_input == 'ㅜ':
-                print("게임을 종료합니다.")
-                kill_game = True
-                break
-            else:
-                print("입력 오류 입니다.")
-                continue
-        if kill_game:
-            break
+        reset_tile()
+        data_a = open(r".\data\record.txt","a")
+        if a_win:
+            data_a.write("a_win by adam vs adam\n")
+        elif b_win:
+            data_a.write("b_win by adam vs adam\n")
+        else:
+            data_a.write("cycle by adam vs adam\n")
+        data_a.close()
+        break
+    
     print("a움직 후")
     visualize()
     ctfa_a()
@@ -1687,29 +1984,408 @@ while True:
     #player_change('b')
     game_end = False
     start_time = ti.time()
-    AI_move_b()
+    AI_adam_move_b()
     lose_check(2)
+    cycle_check_add()
     if game_end:
+        cycle_reset()
         print("게임 종료")
-        while True:
-            user_input = input("다시 하시겠습니까?(Y/N)")
-            if user_input == 'Y' or user_input == 'y' or user_input == 'ㅛ':
-                print("타일을 리셋 중 입니다.")
-                reset_tile()
-                break
-            elif user_input == 'N' or user_input == 'n' or user_input == 'ㅜ':
-                print("게임을 종료합니다.")
-                kill_game = True
-                break
-            else:
-                print("입력 오류 입니다.")
-                continue
-        if kill_game:
-            break
+        reset_tile()
+        data_a = open(r".\data\record.txt","a")
+        if a_win:
+            data_a.write("a_win by adam vs adam\n")
+        elif b_win:
+            data_a.write("b_win by adam vs adam\n")
+        else:
+            data_a.write("cycle by adam vs adam\n")
+        data_a.close()
+        break
     print("b 움직 후")
     visualize()
     ctfa_a()
     ctfa_b()
     #input("다음과 같이 움직였습니다.")
+
+a_win = False
+b_win = False
+#RMS vs adam
+while True:
+    game_end = False
+    #player_change('a')
+    start_time = ti.time()
+    AI_RMS_move_a()
+    lose_check(1)
+    cycle_check_add()
+    if game_end:
+        cycle_reset()
+        print("게임 종료")
+        reset_tile()
+        data_a = open(r".\data\record.txt","a")
+        if a_win:
+            data_a.write("a_win by RMS vs adam\n")
+        elif b_win:
+            data_a.write("b_win by RMS vs adam\n")
+        else:
+            data_a.write("cycle by RMS vs adam\n")
+        data_a.close()
+        break
+    
+    print("a움직 후")
+    visualize()
+    ctfa_a()
+    ctfa_b()
+    #input("다음과 같이 움직였습니다.")
+    #player_change('b')
+    game_end = False
+    start_time = ti.time()
+    AI_adam_move_b()
+    lose_check(2)
+    cycle_check_add()
+    if game_end:
+        cycle_reset()
+        print("게임 종료")
+        reset_tile()
+        data_a = open(r".\data\record.txt","a")
+        if a_win:
+            data_a.write("a_win by RMS vs adam\n")
+        elif b_win:
+            data_a.write("b_win by RMS vs adam\n")
+        else:
+            data_a.write("cycle by RMS vs adam\n")
+        data_a.close()
+        break
+    print("b 움직 후")
+    visualize()
+    ctfa_a()
+    ctfa_b()
+    #input("다음과 같이 움직였습니다.")
+a_win = False
+b_win = False
+#adam vs RMS
+while True:
+    game_end = False
+    #player_change('a')
+    start_time = ti.time()
+    AI_adam_move_a()
+    lose_check(1)
+    cycle_check_add()
+    if game_end:
+        cycle_reset()
+        print("게임 종료")
+        reset_tile()
+        data_a = open(r".\data\record.txt","a")
+        if a_win:
+            data_a.write("a_win by adam vs RMS\n")
+        elif b_win:
+            data_a.write("b_win by adam vs RMS\n")
+        else:
+            data_a.write("cycle by adam vs RMS\n")
+        data_a.close()
+        break
+    
+    print("a움직 후")
+    visualize()
+    ctfa_a()
+    ctfa_b()
+    #input("다음과 같이 움직였습니다.")
+    #player_change('b')
+    game_end = False
+    start_time = ti.time()
+    AI_RMS_move_b()
+    lose_check(2)
+    cycle_check_add()
+    if game_end:
+        cycle_reset()
+        print("게임 종료")
+        reset_tile()
+        data_a = open(r".\data\record.txt","a")
+        if a_win:
+            data_a.write("a_win by adam vs RMS\n")
+        elif b_win:
+            data_a.write("b_win by adam vs RMS\n")
+        else:
+            data_a.write("cycle by adam vs RMS\n")
+        data_a.close()
+        break
+    print("b 움직 후")
+    visualize()
+    ctfa_a()
+    ctfa_b()
+    #input("다음과 같이 움직였습니다.")
+a_win = False
+b_win = False
+#RMS vs RMS
+
+while True:
+    game_end = False
+    #player_change('a')
+    start_time = ti.time()
+    AI_RMS_move_a()
+    lose_check(1)
+    cycle_check_add()
+    if game_end:
+        cycle_reset()
+        print("게임 종료")
+        reset_tile()
+        data_a = open(r".\data\record.txt","a")
+        if a_win:
+            data_a.write("a_win by RMS vs RMS\n")
+        elif b_win:
+            data_a.write("b_win by RMS vs RMS\n")
+        else:
+            data_a.write("cycle by RMS vs RMS\n")
+        data_a.close()
+        break
+    
+    print("a움직 후")
+    visualize()
+    ctfa_a()
+    ctfa_b()
+    #input("다음과 같이 움직였습니다.")
+    #player_change('b')
+    game_end = False
+    start_time = ti.time()
+    AI_RMS_move_b()
+    lose_check(2)
+    cycle_check_add()
+    if game_end:
+        cycle_reset()
+        print("게임 종료")
+        reset_tile()
+        data_a = open(r".\data\record.txt","a")
+        if a_win:
+            data_a.write("a_win by RMS vs RMS\n")
+        elif b_win:
+            data_a.write("b_win by RMS vs RMS\n")
+        else:
+            data_a.write("cycle by RMS vs RMS\n")
+        data_a.close()
+        break
+    print("b 움직 후")
+    visualize()
+    ctfa_a()
+    ctfa_b()
+    #input("다음과 같이 움직였습니다.")
+a_win = False
+b_win = False
+#random vs adam
+for _ in range(50):
+    while True:
+        game_end = False
+        a_win = False
+        b_win = False
+        #player_change('a')
+        start_time = ti.time()
+        random_move_a()
+        lose_check(1)
+        cycle_check_add()
+        if game_end:
+            cycle_reset()
+            print("게임 종료")
+            reset_tile()
+            data_a = open(r".\data\record.txt","a")
+            if a_win:
+                data_a.write("a_win by random vs adam\n")
+            elif b_win:
+                data_a.write("b_win by random vs adam\n")
+            else:
+                data_a.write("cycle by random vs adam\n")
+            data_a.close()
+            break
+        
+        print("a움직 후")
+        visualize()
+        ctfa_a()
+        ctfa_b()
+        #input("다음과 같이 움직였습니다.")
+        #player_change('b')
+        game_end = False
+        start_time = ti.time()
+        AI_adam_move_b()
+        lose_check(2)
+        cycle_check_add()
+        if game_end:
+            cycle_reset()
+            print("게임 종료")
+            reset_tile()
+            data_a = open(r".\data\record.txt","a")
+            if a_win:
+                data_a.write("a_win by random vs adam\n")
+            elif b_win:
+                data_a.write("b_win by random vs adam\n")
+            else:
+                data_a.write("cycle by random vs adam\n")
+            data_a.close()
+            break
+        print("b 움직 후")
+        visualize()
+        ctfa_a()
+        ctfa_b()
+        #input("다음과 같이 움직였습니다.")
+
+#random vs RMS
+for _ in range(50):
+    while True:
+        game_end = False
+        a_win = False
+        b_win = False
+        #player_change('a')
+        start_time = ti.time()
+        random_move_a()
+        lose_check(1)
+        cycle_check_add()
+        if game_end:
+            cycle_reset()
+            print("게임 종료")
+            reset_tile()
+            data_a = open(r".\data\record.txt","a")
+            if a_win:
+                data_a.write("a_win by random vs RMS\n")
+            elif b_win:
+                data_a.write("b_win by random vs RMS\n")
+            else:
+                data_a.write("cycle by random vs RMS\n")
+            data_a.close()
+            break
+        
+        print("a움직 후")
+        visualize()
+        ctfa_a()
+        ctfa_b()
+        #input("다음과 같이 움직였습니다.")
+        #player_change('b')
+        game_end = False
+        start_time = ti.time()
+        AI_RMS_move_b()
+        lose_check(2)
+        cycle_check_add()
+        if game_end:
+            cycle_reset()
+            print("게임 종료")
+            reset_tile()
+            data_a = open(r".\data\record.txt","a")
+            if a_win:
+                data_a.write("a_win by random vs RMS\n")
+            elif b_win:
+                data_a.write("b_win by random vs RMS\n")
+            else:
+                data_a.write("cycle by random vs RMS\n")
+            data_a.close()
+            break
+        print("b 움직 후")
+        visualize()
+        ctfa_a()
+        ctfa_b()
+        #input("다음과 같이 움직였습니다.")
+
+#adam vs random
+for _ in range(50):
+    while True:
+        game_end = False
+        a_win = False
+        b_win = False
+        #player_change('a')
+        start_time = ti.time()
+        AI_adam_move_a()
+        lose_check(1)
+        cycle_check_add()
+        if game_end:
+            cycle_reset()
+            print("게임 종료")
+            reset_tile()
+            data_a = open(r".\data\record.txt","a")
+            if a_win:
+                data_a.write("a_win by adam vs random\n")
+            elif b_win:
+                data_a.write("b_win by adam vs random\n")
+            else:
+                data_a.write("cycle by adam vs random\n")
+            data_a.close()
+            break
+        
+        print("a움직 후")
+        visualize()
+        ctfa_a()
+        ctfa_b()
+        #input("다음과 같이 움직였습니다.")
+        #player_change('b')
+        game_end = False
+        start_time = ti.time()
+        random_move_b()
+        lose_check(2)
+        cycle_check_add()
+        if game_end:
+            cycle_reset()
+            print("게임 종료")
+            reset_tile()
+            data_a = open(r".\data\record.txt","a")
+            if a_win:
+                data_a.write("a_win by adam vs random\n")
+            elif b_win:
+                data_a.write("b_win by adam vs random\n")
+            else:
+                data_a.write("cycle by adam vs random\n")
+            data_a.close()
+            break
+        print("b 움직 후")
+        visualize()
+        ctfa_a()
+        ctfa_b()
+        #input("다음과 같이 움직였습니다.")
+
+#RMS vs random
+for _ in range(50):
+    while True:
+        game_end = False
+        a_win = False
+        b_win = False
+        #player_change('a')
+        start_time = ti.time()
+        AI_RMS_move_a()
+        lose_check(1)
+        cycle_check_add()
+        if game_end:
+            cycle_reset()
+            print("게임 종료")
+            reset_tile()
+            data_a = open(r".\data\record.txt","a")
+            if a_win:
+                data_a.write("a_win by RMS vs random\n")
+            elif b_win:
+                data_a.write("b_win by RMS vs random\n")
+            else:
+                data_a.write("cycle by RMS vs random\n")
+            data_a.close()
+            break
+        
+        print("a움직 후")
+        visualize()
+        ctfa_a()
+        ctfa_b()
+        #input("다음과 같이 움직였습니다.")
+        #player_change('b')
+        game_end = False
+        start_time = ti.time()
+        random_move_b()
+        lose_check(2)
+        cycle_check_add()
+        if game_end:
+            cycle_reset()
+            print("게임 종료")
+            reset_tile()
+            data_a = open(r".\data\record.txt","a")
+            if a_win:
+                data_a.write("a_win by RMS vs random\n")
+            elif b_win:
+                data_a.write("b_win by RMS vs random\n")
+            else:
+                data_a.write("cycle by RMS vs random\n")
+            data_a.close()
+            break
+        print("b 움직 후")
+        visualize()
+        ctfa_a()
+        ctfa_b()
+        #input("다음과 같이 움직였습니다.")
 
 input("프로그램을 종료합니다.")
